@@ -139,9 +139,10 @@
     overflow:hidden;
     display:flex;flex-direction:column;
     box-shadow:var(--shadow);
-    transition:transform .14s ease, box-shadow .14s ease;
+    transition:transform .14s ease, box-shadow .14s ease, background .15s ease, border-color .15s ease;
   }
   .card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(91,33,20,0.10);}
+  .card.is-rejected{background:rgba(193,61,61,0.62);border-color:var(--red-600);box-shadow:0 0 0 3px rgba(193,61,61,0.45);}
   .thumb{
     position:relative;width:100%;
     aspect-ratio: 1/1;
@@ -201,6 +202,14 @@
     transition:transform .15s ease;
   }
   .status-toggle.is-active .knob{transform:translateX(16px);}
+  .reject-toggle{
+    flex:none;width:26px;height:22px;border-radius:6px;
+    background:#fff;border:1.5px solid var(--red-600);color:var(--red-600);
+    cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;
+    transition:background .15s ease,color .15s ease;
+  }
+  .reject-toggle:hover{background:rgba(193,61,61,0.10);}
+  .reject-toggle.is-rejected{background:var(--red-600);color:#fff;}
   .copy-text-btn.status-active{color:var(--sage-600);border-color:rgba(94,140,79,0.35);}
   .copy-text-btn.status-active:hover{background:rgba(94,140,79,0.10);}
   .copy-text-btn.status-inactive{color:var(--red-600);border-color:rgba(193,61,61,0.35);}
@@ -939,7 +948,6 @@
 
     list.forEach(entry=>{
       const card = document.createElement('div');
-      card.className = 'card';
 
       const badges = [];
       if(entry.geo) badges.push(`<span class="badge geo">${esc(entry.geo)}</span>`);
@@ -957,6 +965,8 @@
         : '';
 
       const isActive = entry.active !== false;
+      const isRejected = entry.rejected === true;
+      card.className = 'card' + (isRejected ? ' is-rejected' : '');
 
       const copyButtons = [`<button class="btn btn-ghost copy-text-btn ${isActive ? 'status-active' : 'status-inactive'}" title="Скопировать текст сторика">Текст</button>`];
       if(entry.linkButton) copyButtons.push(`<button class="icon-btn copy-link1-btn" title="Скопировать ссылку в кнопку"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="10" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg></button>`);
@@ -985,6 +995,9 @@
               </button>
               <button class="status-toggle ${isActive ? 'is-active' : ''}" data-role="status-toggle" title="${isActive ? 'Активен — нажми, чтобы деактивировать' : 'Неактивен — нажми, чтобы активировать'}">
                 <span class="knob"></span>
+              </button>
+              <button class="reject-toggle ${isRejected ? 'is-rejected' : ''}" data-role="reject-toggle" title="${isRejected ? 'Отклонён — нажми, чтобы снять отметку' : 'Отметить как отклонённый'}">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
               </button>
             </div>
           </div>
@@ -1044,6 +1057,19 @@
           await dbPut(entry);
         }catch(err){
           entry.active = prev;
+          showToast('Не удалось изменить статус');
+          return;
+        }
+        render();
+      });
+      card.querySelector('[data-role=reject-toggle]').addEventListener('click', async (ev)=>{
+        ev.stopPropagation();
+        const prev = entry.rejected;
+        entry.rejected = !isRejected;
+        try{
+          await dbPut(entry);
+        }catch(err){
+          entry.rejected = prev;
           showToast('Не удалось изменить статус');
           return;
         }
