@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Склад сториков</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏺</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sand-50:#FBF4E7;
+    --sand-100:#F2E2C4;
+    --sand-200:#E7D0A6;
+    --clay-500:#C1522E;
+    --clay-600:#A8431F;
+    --clay-700:#7E3216;
+    --gold-400:#D89B47;
+    --gold-500:#C08535;
+    --rust-800:#5B2114;
+    --sage-600:#5E8C4F;
+    --sage-700:#3F6B34;
+    --red-600:#C13D3D;
+    --red-700:#9B2E2E;
+    --blue-500:#3B6FA8;
+    --blue-600:#2E5786;
+    --ink-900:#2B2015;
+    --ink-600:#5B4C3B;
+    --line:rgba(43,32,21,0.14);
+    --shadow:0 1px 2px rgba(91,33,20,0.06);
+    --radius:14px;
+    font-size:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(216,155,71,0.16), transparent 60%),
+      radial-gradient(ellipse 800px 600px at 100% 0%, rgba(193,82,46,0.10), transparent 55%),
+      var(--sand-50);
+    color:var(--ink-900);
+    font-family:'Archivo',sans-serif;
+    min-height:100vh;
+  }
+  ::selection{background:var(--gold-400);color:var(--rust-800);}
+
+  a{color:var(--clay-600);}
+
+  /* ---------- Header ---------- */
+  header.top{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:16px;
+    padding:18px 28px;
+    border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:20;
+    background:rgba(251,244,231,0.88);
+    backdrop-filter:blur(8px);
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand .mark{
+    width:26px;height:26px;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;line-height:1;
+    background:var(--clay-500);color:var(--sand-50);
+    border-radius:7px;
+  }
+  .brand h1{
+    font-family:'Fraunces',serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:1.28rem;
+    letter-spacing:-0.01em;
+    margin:0;
+    color:var(--rust-800);
+  }
+  .brand .count{
+    font-size:0.82rem;color:var(--ink-600);
+    border-left:1px solid var(--line);padding-left:10px;margin-left:2px;
+  }
+  .btn{
+    font-family:'Archivo',sans-serif;
+    border:none;cursor:pointer;
+    border-radius:10px;
+    font-weight:600;
+    font-size:0.92rem;
+    padding:10px 16px;
+    transition:transform .12s ease, box-shadow .12s ease, background .15s ease;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--clay-500);color:var(--sand-50);box-shadow:var(--shadow);}
+  .btn-primary:hover{background:var(--clay-600);}
+  .btn-ghost{background:transparent;color:var(--ink-900);border:1px solid var(--line);}
+  .btn-ghost:hover{background:var(--sand-100);}
+  .btn-small{padding:7px 11px;font-size:0.8rem;border-radius:8px;}
+
+  /* ---------- Controls ---------- */
+  .controls{
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    padding:16px 28px;
+    border-bottom:1px solid var(--line);
+  }
+  .field-inline{position:relative;}
+  input[type=text].search{
+    width:220px;padding:9px 12px 9px 32px;border-radius:10px;
+    border:1px solid var(--line);background:var(--sand-50);
+    font-family:'Archivo',sans-serif;font-size:0.88rem;color:var(--ink-900);
+  }
+  .search-wrap{position:relative;}
+  .search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.55;pointer-events:none;}
+  select.pick{
+    padding:9px 30px 9px 12px;border-radius:10px;border:1px solid var(--line);
+    background:var(--sand-50) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%235B4C3B"/></svg>') no-repeat right 12px center;
+    appearance:none;-webkit-appearance:none;
+    font-family:'Archivo',sans-serif;font-size:0.85rem;color:var(--ink-900);cursor:pointer;
+  }
+  .spacer{flex:1;}
+  .tile-size{
+    display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--ink-600);
+  }
+  .tile-size input[type=range]{accent-color:var(--clay-500);width:110px;}
+
+  /* ---------- Grid ---------- */
+  main{padding:22px 28px 60px;}
+  .grid{
+    display:grid;
+    gap:16px;
+    grid-template-columns:repeat(var(--cols,5), minmax(0,1fr));
+  }
+  .empty{
+    text-align:center;padding:80px 20px;color:var(--ink-600);
+  }
+  .empty .big{font-family:'Fraunces',serif;font-size:1.4rem;color:var(--rust-800);margin-bottom:6px;}
+
+  .card{
+    background:var(--sand-100);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    box-shadow:var(--shadow);
+    transition:transform .14s ease, box-shadow .14s ease;
+  }
+  .card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(91,33,20,0.10);}
+  .thumb{
+    position:relative;width:100%;
+    aspect-ratio: 1/1;
+    background:var(--sand-200);
+    overflow:hidden;cursor:pointer;
+  }
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .thumb .noimg{
+    width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+    color:var(--ink-600);font-size:0.78rem;text-align:center;padding:10px;
+  }
+  .badges{
+    position:absolute;top:8px;left:8px;right:8px;display:flex;gap:4px;flex-wrap:nowrap;
+    overflow:hidden;
+  }
+  .badges .badge{flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .badge{
+    font-size:0.66rem;font-weight:700;letter-spacing:0.01em;
+    padding:3px 7px;border-radius:6px;
+    backdrop-filter:blur(3px);
+    box-shadow:0 1px 3px rgba(0,0,0,0.15);
+  }
+  .badge.geo{background:rgba(43,32,21,0.82);color:var(--sand-50);}
+  .badge.tested{background:var(--clay-500);color:var(--sand-50);}
+  .badge.nottested{background:rgba(251,244,231,0.92);color:var(--ink-600);border:1px solid var(--line);}
+  .badge.pos{background:var(--sage-600);color:var(--sand-50);}
+  .badge.neg{background:var(--red-600);color:var(--sand-50);}
+  .badge.aspect{background:rgba(251,244,231,0.92);color:var(--ink-600);border:1px solid var(--line);}
+  .badges-bottom{
+    position:absolute;bottom:8px;right:8px;display:flex;gap:5px;
+  }
+
+  .card-body{padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px;flex:1;}
+  .story-preview{
+    font-size:0.82rem;line-height:1.4;color:var(--ink-900);
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+    max-height:calc(1.4em * 3);
+  }
+  .tags-row{display:flex;flex-wrap:wrap;gap:5px;}
+  .tag-chip{
+    font-size:0.68rem;background:var(--sand-50);border:1px solid var(--line);
+    color:var(--ink-600);padding:2px 7px;border-radius:20px;
+  }
+  .card-actions{display:flex;flex-direction:column;gap:6px;margin-top:auto;padding-top:4px;}
+  .copy-row{display:flex;gap:6px;flex-wrap:wrap;}
+  .copy-row .btn{flex:1;min-width:0;padding:7px 8px;font-size:0.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .icon-row{display:flex;gap:6px;align-items:center;}
+  .status-toggle{
+    position:relative;flex:none;width:38px;height:22px;border-radius:20px;
+    background:var(--red-600);border:none;cursor:pointer;padding:0;margin-left:auto;
+    transition:background .15s ease;
+  }
+  .status-toggle.is-active{background:var(--sage-600);}
+  .status-toggle .knob{
+    position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.25);
+    transition:transform .15s ease;
+  }
+  .status-toggle.is-active .knob{transform:translateX(16px);}
+  .copy-text-btn.status-active{color:var(--sage-600);border-color:rgba(94,140,79,0.35);}
+  .copy-text-btn.status-active:hover{background:rgba(94,140,79,0.10);}
+  .copy-text-btn.status-inactive{color:var(--red-600);border-color:rgba(193,61,61,0.35);}
+  .copy-text-btn.status-inactive:hover{background:rgba(193,61,61,0.10);}
+  .icon-btn{
+    background:transparent;border:1px solid var(--line);color:var(--ink-600);
+    width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;flex:none;
+  }
+  .icon-btn:hover{background:var(--sand-50);}
+  .copied-flash{opacity:0.85;}
+  .icon-btn.copied-flash-icon{background:var(--sage-600);border-color:var(--sage-600);color:#fff;}
+  .copy-link1-btn{color:var(--sage-600);border-color:rgba(94,140,79,0.35);}
+  .copy-link1-btn:hover{background:rgba(94,140,79,0.12);}
+  .copy-link2-btn{color:var(--blue-500);border-color:rgba(59,111,168,0.35);}
+  .copy-link2-btn:hover{background:rgba(59,111,168,0.12);}
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(43,32,21,0.45);
+    display:none;align-items:flex-start;justify-content:center;
+    padding:5vh 16px;overflow-y:auto;z-index:100;
+  }
+  .overlay.open{display:flex;}
+  .modal{
+    background:var(--sand-50);border-radius:18px;
+    width:100%;max-width:560px;
+    box-shadow:0 20px 50px rgba(43,32,21,0.35);
+    border:1px solid var(--line);
+  }
+  .modal-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 22px;border-bottom:1px solid var(--line);
+  }
+  .modal-head h2{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;margin:0;color:var(--rust-800);
+  }
+  .modal-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--ink-600);line-height:1;padding:4px;}
+  .modal-body{padding:20px 22px;display:flex;flex-direction:column;gap:16px;max-height:72vh;overflow-y:auto;}
+  .form-row{display:flex;flex-direction:column;gap:6px;}
+  .form-row label{font-size:0.8rem;font-weight:600;color:var(--ink-600);}
+  .form-row .hint{font-size:0.72rem;color:var(--ink-600);font-weight:400;opacity:.8;}
+  textarea,input[type=text],input[type=url]{
+    font-family:'Archivo',sans-serif;font-size:0.9rem;color:var(--ink-900);
+    border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+    background:#fff;width:100%;
+  }
+  textarea{resize:vertical;min-height:100px;line-height:1.45;white-space:pre-wrap;}
+  textarea:focus,input:focus,select:focus{outline:2px solid var(--gold-400);outline-offset:1px;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .pill-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .pill{
+    border:1px solid var(--line);background:#fff;color:var(--ink-600);
+    padding:8px 14px;border-radius:20px;font-size:0.84rem;cursor:pointer;font-weight:600;
+    transition:all .12s ease;
+  }
+  .pill.active-tested{background:var(--clay-500);border-color:var(--clay-500);color:#fff;}
+  .pill.active-nottested{background:var(--sand-200);border-color:var(--sand-200);color:var(--ink-900);}
+  .pill.active-pos{background:var(--sage-600);border-color:var(--sage-600);color:#fff;}
+  .pill.active-neg{background:var(--red-600);border-color:var(--red-600);color:#fff;}
+  .aspect-toggle{display:flex;gap:8px;}
+  .aspect-toggle .pill.active{background:var(--clay-500);border-color:var(--clay-500);color:#fff;}
+
+  .drop{
+    border:1.5px dashed var(--line);border-radius:12px;padding:18px;
+    display:flex;align-items:center;gap:14px;cursor:pointer;background:#fff;
+  }
+  .drop:hover{border-color:var(--clay-500);}
+  .drop .preview{
+    width:64px;height:64px;border-radius:8px;overflow:hidden;background:var(--sand-100);
+    flex:none;display:flex;align-items:center;justify-content:center;font-size:0.65rem;color:var(--ink-600);text-align:center;
+  }
+  .drop .preview img{width:100%;height:100%;object-fit:cover;}
+  .drop .txt{font-size:0.82rem;color:var(--ink-600);}
+  .drop .txt b{color:var(--ink-900);}
+
+  .tagbox{
+    display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--line);border-radius:10px;
+    padding:8px;background:#fff;min-height:44px;align-items:center;
+  }
+  .tagbox .tag-chip{background:var(--sand-100);cursor:default;display:flex;align-items:center;gap:5px;}
+  .tagbox .tag-chip button{background:none;border:none;cursor:pointer;color:var(--ink-600);font-size:0.8rem;padding:0;}
+  .tag-color-dot{
+    width:14px;height:14px;border-radius:50%;flex:none;cursor:pointer;
+    border:1px solid var(--line);display:inline-block;position:relative;
+  }
+  .color-palette-popover{
+    position:absolute;z-index:1000;background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:8px;box-shadow:0 8px 24px rgba(43,32,21,0.18);display:flex;flex-wrap:wrap;gap:6px;width:176px;
+  }
+  .palette-swatch{
+    width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,0.12);cursor:pointer;flex:none;padding:0;
+  }
+  .palette-swatch:hover{transform:scale(1.12);}
+  .palette-clear{
+    background:#fff;color:var(--ink-600);display:flex;align-items:center;justify-content:center;
+    font-size:0.75rem;border:1px solid var(--line);
+  }
+  .tagbox input{border:none;flex:1;min-width:90px;padding:4px;font-size:0.84rem;}
+  .tagbox input:focus{outline:none;}
+
+  .modal-foot{
+    padding:16px 22px;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+  }
+  .req-note{font-size:0.72rem;color:var(--ink-600);}
+
+  datalist{}
+
+  @media (max-width: 900px){
+    .grid{grid-template-columns:repeat(var(--cols-mobile,2), minmax(0,1fr)) !important;}
+    header.top,.controls,main{padding-left:16px;padding-right:16px;}
+    .two-col{grid-template-columns:1fr;}
+    .tile-size{display:none;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+
+  .toast{
+    position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
+    background:var(--rust-800);color:var(--sand-50);
+    padding:10px 18px;border-radius:10px;font-size:0.85rem;
+    box-shadow:0 8px 20px rgba(0,0,0,0.25);
+    opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;
+    z-index:200;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px);}
+
+  /* ---------- View (full story) modal ---------- */
+  .story-preview{cursor:pointer;}
+  .read-more{font-size:0.72rem;color:var(--clay-600);font-weight:700;margin-top:-4px;}
+  .view-modal .modal-body{gap:14px;}
+  .view-badges{display:flex;gap:6px;flex-wrap:wrap;}
+  .view-image{width:100%;max-height:380px;border-radius:12px;overflow:hidden;background:var(--sand-100);}
+  .view-image img{width:100%;max-height:380px;object-fit:contain;display:block;}
+  .view-text{
+    white-space:pre-wrap;word-wrap:break-word;
+    font-size:0.94rem;line-height:1.6;color:var(--ink-900);
+  }
+  .view-links{display:flex;flex-direction:column;gap:12px;font-size:0.84rem;}
+  .view-links a{word-break:break-all;color:var(--clay-600);}
+  .view-links .link-label{color:var(--ink-600);font-weight:600;margin-right:4px;}
+  .view-tags{display:flex;flex-wrap:wrap;gap:5px;}
+  .view-comment{font-size:0.84rem;color:var(--ink-600);border-top:1px solid var(--line);padding-top:12px;white-space:pre-wrap;}
+
+  /* ---------- Archive ---------- */
+  #archiveCount{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:18px;height:18px;padding:0 5px;
+    background:var(--clay-500);color:var(--sand-50);
+    border-radius:20px;font-size:0.7rem;font-weight:700;
+    margin-left:2px;
+  }
+  .archive-row{
+    display:flex;gap:12px;align-items:center;
+    padding:10px;border:1px solid var(--line);border-radius:12px;
+    background:var(--sand-100);margin-bottom:10px;
+  }
+  .archive-thumb{
+    width:56px;height:56px;border-radius:8px;overflow:hidden;background:var(--sand-200);flex:none;
+    display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--ink-600);text-align:center;
+  }
+  .archive-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .archive-info{flex:1;min-width:0;}
+  .archive-text{
+    font-size:0.82rem;color:var(--ink-900);line-height:1.4;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    white-space:pre-wrap;
+  }
+  .archive-badges{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap;}
+  .archive-badges .badge{position:static;}
+  .archive-actions{display:flex;gap:6px;flex:none;align-items:center;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <div class="mark">🏺</div>
+    <h1>Склад сториков</h1>
+    <span class="count" id="countLabel">0 сториков</span>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <button class="btn btn-ghost" id="openArchiveBtn">Архив <span id="archiveCount">0</span></button>
+    <button class="btn btn-primary" id="openAddBtn">+ Добавить сторис</button>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#5B4C3B" stroke-width="2"/><path d="M21 21l-4-4" stroke="#5B4C3B" stroke-width="2" stroke-linecap="round"/></svg>
+    <input type="text" class="search" id="searchInput" placeholder="Поиск по тексту, тегам, ссылкам...">
+  </div>
+  <select class="pick" id="filterGeo"><option value="">Гео: все</option></select>
+  <select class="pick" id="filterTested">
+    <option value="">Статус: все</option>
+    <option value="tested">Тестил</option>
+    <option value="not_tested">Не тестил</option>
+  </select>
+  <select class="pick" id="filterSentiment">
+    <option value="">Тип: все</option>
+    <option value="positive">Плюсовая</option>
+    <option value="negative">Минусовая</option>
+  </select>
+  <select class="pick" id="filterTag"><option value="">Тег: любой</option></select>
+  <select class="pick" id="filterActive">
+    <option value="">Активность: все</option>
+    <option value="active">Актив</option>
+    <option value="inactive">Инактив</option>
+  </select>
+  <div class="spacer"></div>
+  <div class="tile-size">
+    <span>Плитки</span>
+    <input type="range" id="colsRange" min="2" max="8" value="5" step="1">
+    <span id="colsLabel">5</span>
+  </div>
+</div>
+
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="emptyState" style="display:none;">
+    <div class="big">Пока пусто</div>
+    <div>Нажми «Добавить сторис», чтобы закинуть первый сторик и фото.</div>
+  </div>
+</main>
+
+<!-- Add/Edit Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalTitle">Новый сторик</h2>
+      <button class="modal-close" id="closeModalBtn">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="form-row">
+        <label>Текст сторика *</label>
+        <textarea id="storyText" placeholder="Вставь полный текст сторика — с эмодзи и отступами, как есть"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>Фото</label>
+        <div class="drop" id="dropZone">
+          <div class="preview" id="imgPreview">нет фото</div>
+          <div class="txt"><b>Нажми, чтобы выбрать фото</b><br>1:1 или 4:5 — как есть, не обрезаем</div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" style="display:none;">
+        <div class="aspect-toggle">
+          <button type="button" class="pill" data-ar="1/1">1:1</button>
+          <button type="button" class="pill" data-ar="4/5">4:5</button>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="form-row">
+          <label>Гео <span class="hint">(2 буквы)</span></label>
+          <input type="text" id="geoInput" maxlength="2" placeholder="GB" list="geoList" style="text-transform:uppercase;">
+          <datalist id="geoList"></datalist>
+        </div>
+        <div class="form-row">
+          <label>Теги</label>
+          <div class="tagbox" id="tagBox">
+            <input type="text" id="tagInput" placeholder="тег + Enter">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Статус теста</label>
+        <div class="pill-group" id="testedGroup">
+          <button type="button" class="pill" data-val="tested">Тестил</button>
+          <button type="button" class="pill" data-val="not_tested">Не тестил</button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Карточка</label>
+        <div class="pill-group" id="sentimentGroup">
+          <button type="button" class="pill" data-val="positive">Плюсовая</button>
+          <button type="button" class="pill" data-val="negative">Минусовая</button>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="form-row">
+          <label>Ссылка в кнопку</label>
+          <input type="url" id="linkButton" placeholder="https://...">
+        </div>
+        <div class="form-row">
+          <label>Ссылка в комментарии</label>
+          <input type="url" id="linkComment" placeholder="https://...">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Комментарий</label>
+        <textarea id="commentText" style="min-height:60px;" placeholder="Заметка для себя"></textarea>
+      </div>
+
+    </div>
+    <div class="modal-foot">
+      <span class="req-note">* обязательно только текст сторика</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost" id="cancelBtn">Отмена</button>
+        <button class="btn btn-primary" id="saveBtn">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- View (full story) Modal -->
+<div class="overlay" id="viewOverlay">
+  <div class="modal view-modal">
+    <div class="modal-head">
+      <h2>Сторик</h2>
+      <button class="modal-close" id="closeViewBtn">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="view-badges" id="viewBadges"></div>
+      <div class="view-image" id="viewImageWrap" style="display:none;"></div>
+      <div class="view-text" id="viewText"></div>
+      <div class="view-tags" id="viewTags"></div>
+      <div class="view-links" id="viewLinks"></div>
+      <div class="view-comment" id="viewComment" style="display:none;"></div>
+    </div>
+    <div class="modal-foot" style="flex-wrap:wrap;">
+      <button class="btn btn-ghost" id="viewEditBtn">Редактировать</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="viewCopyTextBtn">Копировать текст</button>
+        <button class="btn btn-primary" id="viewCopyLink1Btn" style="display:none;">Копировать кнопку</button>
+        <button class="btn btn-primary" id="viewCopyLink2Btn" style="display:none;">Копировать комменты</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Dialog -->
+<div class="overlay" id="confirmOverlay">
+  <div class="modal" style="max-width:360px;">
+    <div class="modal-body" style="padding-top:26px;">
+      <div id="confirmMessage" style="font-size:0.94rem;color:var(--ink-900);"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="confirmCancelBtn">Отмена</button>
+      <button class="btn btn-primary" id="confirmOkBtn" style="background:var(--rust-800);">Удалить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Archive Modal -->
+<div class="overlay" id="archiveOverlay">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-head">
+      <h2>Архив удалённых</h2>
+      <button class="modal-close" id="closeArchiveBtn">✕</button>
+    </div>
+    <div class="modal-body" id="archiveBody"></div>
+    <div class="modal-foot">
+      <span class="req-note">Восстановленные сторики вернутся в общую сетку</span>
+      <button class="btn btn-ghost" id="clearArchiveBtn" style="color:var(--rust-800);">Очистить архив</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- IndexedDB layer ---------------- */
+  const DB_NAME = 'sklad-storikov';
+  const STORE = 'entries';
+  let db;
+
+  function openDB(){
+    return new Promise((resolve,reject)=>{
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = (e)=>{
+        const d = e.target.result;
+        if(!d.objectStoreNames.contains(STORE)){
+          const s = d.createObjectStore(STORE, {keyPath:'id'});
+          s.createIndex('createdAt','createdAt');
+        }
+      };
+      req.onsuccess = (e)=>resolve(e.target.result);
+      req.onerror = (e)=>reject(e);
+    });
+  }
+  function txStore(mode){
+    return db.transaction(STORE, mode).objectStore(STORE);
+  }
+  function dbGetAll(){
+    return new Promise((resolve,reject)=>{
+      const req = txStore('readonly').getAll();
+      req.onsuccess = ()=>resolve(req.result);
+      req.onerror = (e)=>reject(e);
+    });
+  }
+  function dbPut(entry){
+    return new Promise((resolve,reject)=>{
+      const req = txStore('readwrite').put(entry);
+      req.onsuccess = ()=>resolve();
+      req.onerror = (e)=>reject(e);
+    });
+  }
+  function dbDelete(id){
+    return new Promise((resolve,reject)=>{
+      const req = txStore('readwrite').delete(id);
+      req.onsuccess = ()=>resolve();
+      req.onerror = (e)=>reject(e);
+    });
+  }
+
+  /* ---------------- State ---------------- */
+  let entries = [];
+  let editingId = null;
+  let pendingImage = null; // dataURL
+  let pendingAspect = '1/1';
+  let pendingTested = null;
+  let pendingSentiment = null;
+  let pendingTags = [];
+
+  const COMMON_GEOS = ['GB','PL','DE','FR','IT','ES','US','CA','AU','NL','BE','AT','CH','SE','NO','DK','FI','CZ','RO','HU','GR','PT','IE','UA','TR'];
+
+  const $ = (sel)=>document.querySelector(sel);
+  const grid = $('#grid');
+  const emptyState = $('#emptyState');
+  const overlay = $('#overlay');
+  const toastEl = $('#toast');
+
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=>toastEl.classList.remove('show'), 1800);
+  }
+
+  /* ---------------- Custom confirm dialog ---------------- */
+  // Uses our own overlay instead of window.confirm(), since confirm() is
+  // blocked (and silently does nothing) inside sandboxed previews / iframes.
+  const confirmOverlay = $('#confirmOverlay');
+  const confirmMessage = $('#confirmMessage');
+  const confirmOkBtn = $('#confirmOkBtn');
+  const confirmCancelBtn = $('#confirmCancelBtn');
+  let confirmResolve = null;
+
+  function confirmDialog(message){
+    confirmMessage.textContent = message;
+    confirmOverlay.classList.add('open');
+    return new Promise((resolve)=>{
+      confirmResolve = resolve;
+    });
+  }
+  function closeConfirm(result){
+    confirmOverlay.classList.remove('open');
+    if(confirmResolve){
+      confirmResolve(result);
+      confirmResolve = null;
+    }
+  }
+  confirmOkBtn.addEventListener('click', ()=>closeConfirm(true));
+  confirmCancelBtn.addEventListener('click', ()=>closeConfirm(false));
+  confirmOverlay.addEventListener('click', (e)=>{ if(e.target === confirmOverlay) closeConfirm(false); });
+
+  /* ---------------- Archive ---------------- */
+  const archiveOverlay = $('#archiveOverlay');
+  const archiveBody = $('#archiveBody');
+
+  function updateArchiveCount(){
+    $('#archiveCount').textContent = archivedEntries().length;
+  }
+
+  function renderArchive(){
+    const list = archivedEntries().sort((a,b)=>(b.deletedAt||0)-(a.deletedAt||0));
+
+    if(!list.length){
+      archiveBody.innerHTML = `
+        <div class="empty" style="padding:30px 10px;">
+          <div class="big">Архив пуст</div>
+          <div>Сторики, перенесённые в архив, будут появляться здесь.</div>
+        </div>`;
+      return;
+    }
+
+    archiveBody.innerHTML = list.map(entry=>{
+      const badges = [];
+      if(entry.geo) badges.push(`<span class="badge geo">${esc(entry.geo)}</span>`);
+      if(entry.tested === 'tested') badges.push(`<span class="badge tested">Тестил</span>`);
+      if(entry.tested === 'not_tested') badges.push(`<span class="badge nottested">Не тестил</span>`);
+      if(entry.sentiment === 'positive') badges.push(`<span class="badge pos">Плюсовая</span>`);
+      if(entry.sentiment === 'negative') badges.push(`<span class="badge neg">Минусовая</span>`);
+      return `
+        <div class="archive-row" data-id="${entry.id}">
+          <div class="archive-thumb">${entry.image ? `<img src="${entry.image}" alt="">` : 'нет фото'}</div>
+          <div class="archive-info">
+            <div class="archive-text">${esc(entry.storyText)}</div>
+            <div class="archive-badges">${badges.join('')}</div>
+          </div>
+          <div class="archive-actions">
+            <button class="btn btn-ghost btn-small restore-btn">Восстановить</button>
+            <button class="icon-btn forever-btn" title="Удалить навсегда">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>`;
+    }).join('');
+
+    archiveBody.querySelectorAll('.restore-btn').forEach(btn=>{
+      btn.addEventListener('click', async (ev)=>{
+        const id = ev.currentTarget.closest('.archive-row').dataset.id;
+        const entry = entries.find(x=>x.id===id);
+        if(!entry) return;
+        const prevDeletedAt = entry.deletedAt;
+        entry.deletedAt = null;
+        try{
+          await dbPut(entry);
+        }catch(err){
+          entry.deletedAt = prevDeletedAt;
+          showToast('Не удалось восстановить');
+          return;
+        }
+        render();
+        renderArchive();
+        showToast('Восстановлено');
+      });
+    });
+
+    archiveBody.querySelectorAll('.forever-btn').forEach(btn=>{
+      btn.addEventListener('click', async (ev)=>{
+        const id = ev.currentTarget.closest('.archive-row').dataset.id;
+        const ok = await confirmDialog('Удалить навсегда без возможности восстановления?');
+        if(!ok) return;
+        try{
+          await dbDelete(id);
+        }catch(err){
+          showToast('Не удалось удалить');
+          return;
+        }
+        entries = entries.filter(x=>x.id!==id);
+        renderArchive();
+        updateArchiveCount();
+        showToast('Удалено навсегда');
+      });
+    });
+  }
+
+  $('#openArchiveBtn').addEventListener('click', ()=>{
+    renderArchive();
+    archiveOverlay.classList.add('open');
+  });
+  $('#closeArchiveBtn').addEventListener('click', ()=>archiveOverlay.classList.remove('open'));
+  archiveOverlay.addEventListener('click', (e)=>{ if(e.target === archiveOverlay) archiveOverlay.classList.remove('open'); });
+
+  $('#clearArchiveBtn').addEventListener('click', async ()=>{
+    const list = archivedEntries();
+    if(!list.length) return;
+    const ok = await confirmDialog(`Удалить навсегда все сторики из архива (${list.length})? Это нельзя отменить.`);
+    if(!ok) return;
+    for(const e of list){
+      try{ await dbDelete(e.id); }catch(err){ /* skip */ }
+    }
+    entries = entries.filter(x=>!x.deletedAt);
+    renderArchive();
+    updateArchiveCount();
+    showToast('Архив очищен');
+  });
+
+  function uid(){
+    return 'e_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8);
+  }
+
+  /* ---------------- Geo datalist ---------------- */
+  function fillGeoDatalist(){
+    const dl = $('#geoList');
+    dl.innerHTML = COMMON_GEOS.map(g=>`<option value="${g}">`).join('');
+  }
+
+  /* ---------------- Active / archived split ---------------- */
+  function activeEntries(){
+    return entries.filter(e=>!e.deletedAt);
+  }
+  function archivedEntries(){
+    return entries.filter(e=>e.deletedAt);
+  }
+
+  /* ---------------- Render filters ---------------- */
+  function renderFilterOptions(){
+    const geoSel = $('#filterGeo');
+    const tagSel = $('#filterTag');
+    const active = activeEntries();
+    const geos = [...new Set(active.map(e=>e.geo).filter(Boolean))].sort();
+    const tags = [...new Set(active.flatMap(e=>e.tags||[]))].sort();
+    const curGeo = geoSel.value, curTag = tagSel.value;
+    geoSel.innerHTML = '<option value="">Гео: все</option>' + geos.map(g=>`<option value="${g}">${g}</option>`).join('');
+    tagSel.innerHTML = '<option value="">Тег: любой</option>' + tags.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
+    geoSel.value = geos.includes(curGeo) ? curGeo : '';
+    tagSel.value = tags.includes(curTag) ? curTag : '';
+  }
+
+  function esc(s){
+    return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  /* ---------------- Tag colors ---------------- */
+  // Colors are keyed by tag name and stored locally so the same tag looks
+  // the same everywhere (card grid, view modal, tag editor) and stays the
+  // person's choice across sessions.
+  let tagColors = {};
+  try{ tagColors = JSON.parse(localStorage.getItem('sklad_tagColors') || '{}'); }catch(e){ tagColors = {}; }
+
+  function saveTagColors(){
+    try{ localStorage.setItem('sklad_tagColors', JSON.stringify(tagColors)); }catch(e){ /* ignore */ }
+  }
+
+  function contrastTextColor(hex){
+    const c = (hex||'').replace('#','');
+    if(c.length !== 6) return '#2B2015';
+    const r = parseInt(c.slice(0,2),16), g = parseInt(c.slice(2,4),16), b = parseInt(c.slice(4,6),16);
+    const yiq = (r*299 + g*587 + b*114) / 1000;
+    return yiq >= 150 ? '#2B2015' : '#FFFFFF';
+  }
+
+  // Read-only tag chip for the card grid and the full-story view.
+  function tagChipHTML(tag){
+    const color = tagColors[tag];
+    const style = color ? ` style="background:${color};border-color:${color};color:${contrastTextColor(color)};"` : '';
+    return `<span class="tag-chip"${style}>${esc(tag)}</span>`;
+  }
+
+  // Fixed palette — no free color picker, just a set of preset swatches.
+  const TAG_PALETTE = ['#C1522E','#D89B47','#5E8C4F','#3B6FA8','#C13D3D','#7E3216','#8A6D9B','#4A8B8B'];
+  let colorPopoverEl = null;
+
+  function closeColorPopover(){
+    if(colorPopoverEl){
+      colorPopoverEl.remove();
+      colorPopoverEl = null;
+      document.removeEventListener('click', onDocClickForPopover);
+    }
+  }
+  function onDocClickForPopover(e){
+    if(colorPopoverEl && !colorPopoverEl.contains(e.target)) closeColorPopover();
+  }
+  function openColorPalette(anchorEl, tag){
+    closeColorPopover();
+    const pop = document.createElement('div');
+    pop.className = 'color-palette-popover';
+    pop.innerHTML = TAG_PALETTE.map(c=>`<button type="button" class="palette-swatch" data-color="${c}" style="background:${c};" title="${c}"></button>`).join('')
+      + `<button type="button" class="palette-swatch palette-clear" data-color="" title="Без цвета">✕</button>`;
+    document.body.appendChild(pop);
+    const rect = anchorEl.getBoundingClientRect();
+    pop.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+    pop.style.left = Math.min(rect.left + window.scrollX, window.innerWidth - 190) + 'px';
+    pop.querySelectorAll('.palette-swatch').forEach(btn=>{
+      btn.addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        const c = btn.dataset.color;
+        if(c) tagColors[tag] = c; else delete tagColors[tag];
+        saveTagColors();
+        renderTagBox();
+        render();
+        closeColorPopover();
+      });
+    });
+    colorPopoverEl = pop;
+    setTimeout(()=>document.addEventListener('click', onDocClickForPopover), 0);
+  }
+
+  // Card preview strips line breaks so paragraph spacing in the pasted
+  // story can't blow up the 3-line clamp into a tall empty gap; the full
+  // text with its original formatting still shows in the view modal, edit
+  // form and copy button.
+  function previewText(s){
+    return (s||'').replace(/\s+/g, ' ').trim();
+  }
+
+  // "Ссылка в комментарии" only ever needs the domain, so a long link with
+  // tracking params gets trimmed down automatically instead of being
+  // cleaned up by hand.
+  function trimToDomain(urlStr){
+    const s = (urlStr||'').trim();
+    if(!s) return s;
+    const hasProtocol = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(s);
+    try{
+      const u = new URL(hasProtocol ? s : 'https://' + s);
+      return u.protocol + '//' + u.hostname;
+    }catch(e){
+      return s;
+    }
+  }
+
+  /* ---------------- Copy helper ---------------- */
+
+  /* ---------------- Render grid ---------------- */
+  function currentFilters(){
+    return {
+      q: $('#searchInput').value.trim().toLowerCase(),
+      geo: $('#filterGeo').value,
+      tested: $('#filterTested').value,
+      sentiment: $('#filterSentiment').value,
+      tag: $('#filterTag').value,
+      active: $('#filterActive').value
+    };
+  }
+
+  function passesFilter(e, f){
+    if(f.geo && e.geo !== f.geo) return false;
+    if(f.tested && e.tested !== f.tested) return false;
+    if(f.sentiment && e.sentiment !== f.sentiment) return false;
+    if(f.tag && !(e.tags||[]).includes(f.tag)) return false;
+    if(f.active){
+      const isActive = e.active !== false;
+      if(f.active === 'active' && !isActive) return false;
+      if(f.active === 'inactive' && isActive) return false;
+    }
+    if(f.q){
+      const hay = [e.storyText, e.comment, e.geo, e.linkComment, e.linkButton, ...(e.tags||[])].join(' ').toLowerCase();
+      if(!hay.includes(f.q)) return false;
+    }
+    return true;
+  }
+
+  function render(){
+    renderFilterOptions();
+    const f = currentFilters();
+    const active = activeEntries();
+    const list = active.filter(e=>passesFilter(e,f)).sort((a,b)=>b.createdAt-a.createdAt);
+    $('#countLabel').textContent = active.length + (active.length===1 ? ' сторик' : ' сториков');
+    updateArchiveCount();
+
+    grid.innerHTML = '';
+    emptyState.style.display = list.length ? 'none' : 'block';
+
+    list.forEach(entry=>{
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const badges = [];
+      if(entry.geo) badges.push(`<span class="badge geo">${esc(entry.geo)}</span>`);
+      if(entry.tested === 'tested') badges.push(`<span class="badge tested">Тестил</span>`);
+      if(entry.tested === 'not_tested') badges.push(`<span class="badge nottested">Не тестил</span>`);
+      if(entry.sentiment === 'positive') badges.push(`<span class="badge pos">Плюсовая</span>`);
+      if(entry.sentiment === 'negative') badges.push(`<span class="badge neg">Минусовая</span>`);
+
+      const thumbInner = entry.image
+        ? `<img src="${entry.image}" alt="">`
+        : `<div class="noimg">без фото</div>`;
+
+      const tagsRow = (entry.tags||[]).length
+        ? `<div class="tags-row">${entry.tags.map(tagChipHTML).join('')}</div>`
+        : '';
+
+      const isActive = entry.active !== false;
+
+      const copyButtons = [`<button class="btn btn-ghost copy-text-btn ${isActive ? 'status-active' : 'status-inactive'}" title="Скопировать текст сторика">Текст</button>`];
+      if(entry.linkButton) copyButtons.push(`<button class="icon-btn copy-link1-btn" title="Скопировать ссылку в кнопку"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="10" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg></button>`);
+      if(entry.linkComment) copyButtons.push(`<button class="icon-btn copy-link2-btn" title="Скопировать ссылку в комментарии"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M9 15l6-6M8 16l-2 2a3 3 0 01-4.24-4.24l4-4a3 3 0 014.24 0M16 8l2-2a3 3 0 014.24 4.24l-4 4a3 3 0 01-4.24 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`);
+
+      card.innerHTML = `
+        <div class="thumb" data-role="thumb">
+          ${thumbInner}
+          <div class="badges">${badges.join('')}</div>
+          <div class="badges-bottom"><span class="badge aspect">${entry.aspect==='4/5' ? '4:5' : '1:1'}</span></div>
+        </div>
+        <div class="card-body">
+          <div class="story-preview">${esc(previewText(entry.storyText))}</div>
+          ${tagsRow}
+          <div class="card-actions">
+            <div class="copy-row">${copyButtons.join('')}</div>
+            <div class="icon-row">
+              <button class="icon-btn dl-btn" title="Скачать фото" ${entry.image?'':'disabled style="opacity:.35;cursor:default;"'}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="icon-btn edit-btn" title="Редактировать">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="icon-btn del-btn" title="В архив">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="status-toggle ${isActive ? 'is-active' : ''}" data-role="status-toggle" title="${isActive ? 'Активен — нажми, чтобы деактивировать' : 'Неактивен — нажми, чтобы активировать'}">
+                <span class="knob"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      card.querySelector('.story-preview').addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        openView(entry);
+      });
+      card.querySelector('.copy-text-btn').addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        copyPlain(entry.storyText || '', ev.currentTarget);
+      });
+      const l1btn = card.querySelector('.copy-link1-btn');
+      if(l1btn) l1btn.addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        copyPlain(entry.linkButton, ev.currentTarget);
+      });
+      const l2btn = card.querySelector('.copy-link2-btn');
+      if(l2btn) l2btn.addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        copyPlain(entry.linkComment, ev.currentTarget);
+      });
+      const dlBtn = card.querySelector('.dl-btn');
+      if(entry.image){
+        dlBtn.addEventListener('click', (ev)=>{
+          ev.stopPropagation();
+          downloadImage(entry);
+        });
+      }
+      card.querySelector('.edit-btn').addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        openEdit(entry.id);
+      });
+      card.querySelector('.del-btn').addEventListener('click', async (ev)=>{
+        ev.stopPropagation();
+        const ok = await confirmDialog('Перенести сторик в архив?');
+        if(ok){
+          entry.deletedAt = Date.now();
+          try{
+            await dbPut(entry);
+          }catch(err){
+            showToast('Не удалось перенести в архив');
+            entry.deletedAt = null;
+            return;
+          }
+          render();
+          showToast('Перенесено в архив');
+        }
+      });
+      card.querySelector('[data-role=status-toggle]').addEventListener('click', async (ev)=>{
+        ev.stopPropagation();
+        const prev = entry.active;
+        entry.active = !isActive;
+        try{
+          await dbPut(entry);
+        }catch(err){
+          entry.active = prev;
+          showToast('Не удалось изменить статус');
+          return;
+        }
+        render();
+      });
+      if(entry.linkButton){
+        card.querySelector('[data-role=thumb]').style.cursor = 'pointer';
+        card.querySelector('[data-role=thumb]').addEventListener('click', ()=>{
+          window.open(entry.linkButton, '_blank', 'noopener');
+        });
+      }
+
+      grid.appendChild(card);
+    });
+  }
+
+  function flashCopied(btnEl){
+    if(btnEl.classList.contains('icon-btn')){
+      btnEl.classList.add('copied-flash-icon');
+      setTimeout(()=>btnEl.classList.remove('copied-flash-icon'), 900);
+      return;
+    }
+    const old = btnEl.textContent;
+    btnEl.textContent = 'Скопировано ✓';
+    btnEl.classList.add('copied-flash');
+    setTimeout(()=>{ btnEl.textContent = old; btnEl.classList.remove('copied-flash'); }, 1300);
+  }
+
+  // Fallback for when navigator.clipboard is unavailable — happens when the
+  // page is opened directly from disk (file://) instead of served over
+  // https:// or http://localhost, since browsers only expose the modern
+  // Clipboard API in "secure contexts".
+  function legacyCopy(text){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    ta.style.left = '-1000px';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    let ok = false;
+    try{
+      ok = document.execCommand('copy');
+    }catch(err){
+      ok = false;
+    }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function copyPlain(text, btnEl){
+    if(!text) return;
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(()=>{
+        flashCopied(btnEl);
+      }).catch(()=>{
+        if(legacyCopy(text)) flashCopied(btnEl);
+        else showToast('Не удалось скопировать');
+      });
+    } else {
+      if(legacyCopy(text)) flashCopied(btnEl);
+      else showToast('Не удалось скопировать — открой сайт через https, а не файлом');
+    }
+  }
+
+  function downloadImage(entry){
+    const a = document.createElement('a');
+    a.href = entry.image;
+    const geo = entry.geo ? entry.geo.toLowerCase()+'_' : '';
+    a.download = `storik_${geo}${entry.id}.jpg`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  /* ---------------- View (full story) modal ---------------- */
+  const viewOverlay = $('#viewOverlay');
+  let viewingEntry = null;
+
+  function openView(entry){
+    viewingEntry = entry;
+
+    const badges = [];
+    if(entry.geo) badges.push(`<span class="badge geo">${esc(entry.geo)}</span>`);
+    if(entry.tested === 'tested') badges.push(`<span class="badge tested">Тестил</span>`);
+    if(entry.tested === 'not_tested') badges.push(`<span class="badge nottested">Не тестил</span>`);
+    if(entry.sentiment === 'positive') badges.push(`<span class="badge pos">Плюсовая</span>`);
+    if(entry.sentiment === 'negative') badges.push(`<span class="badge neg">Минусовая</span>`);
+    $('#viewBadges').innerHTML = badges.join('');
+
+    const imgWrap = $('#viewImageWrap');
+    if(entry.image){
+      imgWrap.style.display = '';
+      imgWrap.innerHTML = `<img src="${entry.image}" alt="">`;
+    } else {
+      imgWrap.style.display = 'none';
+      imgWrap.innerHTML = '';
+    }
+
+    $('#viewText').textContent = entry.storyText || '';
+
+    const tags = entry.tags || [];
+    $('#viewTags').innerHTML = tags.map(tagChipHTML).join('');
+
+    const linkParts = [];
+    if(entry.linkComment) linkParts.push(`<div><span class="link-label">Ссылка в комментарии:</span><a href="${esc(entry.linkComment)}" target="_blank" rel="noopener">${esc(entry.linkComment)}</a></div>`);
+    if(entry.linkButton) linkParts.push(`<div><span class="link-label">Ссылка в кнопку:</span><a href="${esc(entry.linkButton)}" target="_blank" rel="noopener">${esc(entry.linkButton)}</a></div>`);
+    $('#viewLinks').innerHTML = linkParts.join('');
+
+    $('#viewCopyLink1Btn').style.display = entry.linkButton ? '' : 'none';
+    $('#viewCopyLink2Btn').style.display = entry.linkComment ? '' : 'none';
+
+    const commentEl = $('#viewComment');
+    if(entry.comment){
+      commentEl.style.display = '';
+      commentEl.textContent = entry.comment;
+    } else {
+      commentEl.style.display = 'none';
+      commentEl.textContent = '';
+    }
+
+    viewOverlay.classList.add('open');
+  }
+
+  function closeView(){
+    viewOverlay.classList.remove('open');
+    viewingEntry = null;
+  }
+
+  $('#closeViewBtn').addEventListener('click', closeView);
+  viewOverlay.addEventListener('click', (e)=>{ if(e.target === viewOverlay) closeView(); });
+
+  $('#viewCopyTextBtn').addEventListener('click', (ev)=>{
+    if(!viewingEntry) return;
+    copyPlain(viewingEntry.storyText || '', ev.currentTarget);
+  });
+  $('#viewCopyLink1Btn').addEventListener('click', (ev)=>{
+    if(!viewingEntry) return;
+    copyPlain(viewingEntry.linkButton, ev.currentTarget);
+  });
+  $('#viewCopyLink2Btn').addEventListener('click', (ev)=>{
+    if(!viewingEntry) return;
+    copyPlain(viewingEntry.linkComment, ev.currentTarget);
+  });
+  $('#viewEditBtn').addEventListener('click', ()=>{
+    if(!viewingEntry) return;
+    const id = viewingEntry.id;
+    closeView();
+    openEdit(id);
+  });
+
+  /* ---------------- Tile size slider ---------------- */
+  const colsRange = $('#colsRange');
+  colsRange.addEventListener('input', ()=>{
+    document.documentElement.style.setProperty('--cols', colsRange.value);
+    $('#colsLabel').textContent = colsRange.value;
+    localStorage.setItem('sklad_cols', colsRange.value);
+  });
+  (function initCols(){
+    const saved = localStorage.getItem('sklad_cols');
+    if(saved){ colsRange.value = saved; }
+    document.documentElement.style.setProperty('--cols', colsRange.value);
+    $('#colsLabel').textContent = colsRange.value;
+  })();
+
+  /* ---------------- Filters wiring ---------------- */
+  ['#searchInput','#filterGeo','#filterTested','#filterSentiment','#filterTag','#filterActive'].forEach(sel=>{
+    $(sel).addEventListener('input', render);
+    $(sel).addEventListener('change', render);
+  });
+
+  /* ---------------- Modal logic ---------------- */
+  function resetForm(){
+    editingId = null;
+    pendingImage = null;
+    pendingAspect = '1/1';
+    pendingTested = null;
+    pendingSentiment = null;
+    pendingTags = [];
+    $('#storyText').value = '';
+    $('#geoInput').value = '';
+    $('#linkComment').value = '';
+    $('#linkButton').value = '';
+    $('#commentText').value = '';
+    $('#tagInput').value = '';
+    $('#imgPreview').innerHTML = 'нет фото';
+    $('#fileInput').value = '';
+    document.querySelectorAll('.aspect-toggle .pill').forEach(p=>p.classList.remove('active'));
+    document.querySelector('.aspect-toggle .pill[data-ar="1/1"]').classList.add('active');
+    document.querySelectorAll('#testedGroup .pill').forEach(p=>p.classList.remove('active-tested','active-nottested'));
+    document.querySelectorAll('#sentimentGroup .pill').forEach(p=>p.classList.remove('active-pos','active-neg'));
+    renderTagBox();
+  }
+
+  function openAdd(){
+    resetForm();
+    $('#modalTitle').textContent = 'Новый сторик';
+    overlay.classList.add('open');
+    setTimeout(()=>$('#storyText').focus(), 50);
+  }
+
+  function openEdit(id){
+    const entry = entries.find(e=>e.id===id);
+    if(!entry) return;
+    resetForm();
+    editingId = id;
+    $('#modalTitle').textContent = 'Редактировать сторик';
+    $('#storyText').value = entry.storyText || '';
+    $('#geoInput').value = entry.geo || '';
+    $('#linkComment').value = entry.linkComment || '';
+    $('#linkButton').value = entry.linkButton || '';
+    $('#commentText').value = entry.comment || '';
+    pendingImage = entry.image || null;
+    pendingAspect = entry.aspect || '1/1';
+    pendingTested = entry.tested || null;
+    pendingSentiment = entry.sentiment || null;
+    pendingTags = [...(entry.tags||[])];
+
+    if(pendingImage){
+      $('#imgPreview').innerHTML = `<img src="${pendingImage}" alt="">`;
+    }
+    document.querySelectorAll('.aspect-toggle .pill').forEach(p=>{
+      p.classList.toggle('active', p.dataset.ar === pendingAspect);
+    });
+    if(pendingTested){
+      const p = document.querySelector(`#testedGroup .pill[data-val="${pendingTested}"]`);
+      if(p) p.classList.add(pendingTested==='tested'?'active-tested':'active-nottested');
+    }
+    if(pendingSentiment){
+      const p = document.querySelector(`#sentimentGroup .pill[data-val="${pendingSentiment}"]`);
+      if(p) p.classList.add(pendingSentiment==='positive'?'active-pos':'active-neg');
+    }
+    renderTagBox();
+    overlay.classList.add('open');
+  }
+
+  function closeModal(){
+    overlay.classList.remove('open');
+  }
+
+  $('#openAddBtn').addEventListener('click', openAdd);
+  $('#closeModalBtn').addEventListener('click', closeModal);
+  $('#cancelBtn').addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (e)=>{
+    if(e.key !== 'Escape') return;
+    if(overlay.classList.contains('open')) closeModal();
+    if(viewOverlay.classList.contains('open')) closeView();
+    if(confirmOverlay.classList.contains('open')) closeConfirm(false);
+    if(archiveOverlay.classList.contains('open')) archiveOverlay.classList.remove('open');
+  });
+
+  /* Link comment field auto-trims to just the domain */
+  const linkCommentInput = $('#linkComment');
+  linkCommentInput.addEventListener('blur', ()=>{
+    linkCommentInput.value = trimToDomain(linkCommentInput.value);
+  });
+  linkCommentInput.addEventListener('paste', ()=>{
+    setTimeout(()=>{
+      linkCommentInput.value = trimToDomain(linkCommentInput.value);
+    }, 0);
+  });
+
+  /* Image upload */
+  $('#dropZone').addEventListener('click', ()=>$('#fileInput').click());
+  $('#fileInput').addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      pendingImage = ev.target.result;
+      $('#imgPreview').innerHTML = `<img src="${pendingImage}" alt="">`;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  /* Aspect toggle */
+  document.querySelectorAll('.aspect-toggle .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('.aspect-toggle .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      pendingAspect = p.dataset.ar;
+    });
+  });
+
+  /* Tested / Sentiment single-select pill groups */
+  document.querySelectorAll('#testedGroup .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      const val = p.dataset.val;
+      if(pendingTested === val){
+        pendingTested = null;
+      } else {
+        pendingTested = val;
+      }
+      document.querySelectorAll('#testedGroup .pill').forEach(x=>x.classList.remove('active-tested','active-nottested'));
+      if(pendingTested){
+        p.classList.add(pendingTested==='tested' ? 'active-tested' : 'active-nottested');
+      }
+    });
+  });
+  document.querySelectorAll('#sentimentGroup .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      const val = p.dataset.val;
+      if(pendingSentiment === val){
+        pendingSentiment = null;
+      } else {
+        pendingSentiment = val;
+      }
+      document.querySelectorAll('#sentimentGroup .pill').forEach(x=>x.classList.remove('active-pos','active-neg'));
+      if(pendingSentiment){
+        p.classList.add(pendingSentiment==='positive' ? 'active-pos' : 'active-neg');
+      }
+    });
+  });
+
+  /* Tags */
+  function renderTagBox(){
+    const box = $('#tagBox');
+    const input = $('#tagInput');
+    box.querySelectorAll('.tag-chip').forEach(c=>c.remove());
+    pendingTags.forEach(tag=>{
+      const color = tagColors[tag];
+      const chip = document.createElement('span');
+      chip.className = 'tag-chip editable-chip';
+      if(color){
+        chip.style.background = color;
+        chip.style.borderColor = color;
+        chip.style.color = contrastTextColor(color);
+      }
+      chip.innerHTML = `
+        <button type="button" class="tag-color-dot" style="background:${color || '#fff'};border-color:${color ? 'transparent' : 'var(--line)'};" title="Изменить цвет тега"></button>
+        <span class="tag-chip-label">${esc(tag)}</span>
+        <button type="button" aria-label="Удалить тег">✕</button>
+      `;
+      chip.querySelector('.tag-color-dot').addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        openColorPalette(ev.currentTarget, tag);
+      });
+      chip.querySelector('button[aria-label="Удалить тег"]').addEventListener('click', ()=>{
+        pendingTags = pendingTags.filter(t=>t!==tag);
+        renderTagBox();
+      });
+      box.insertBefore(chip, input);
+    });
+  }
+  // Commits whatever is currently typed in the tag input as a tag. Used on
+  // Enter/comma, on blur, and as a safety net right before save — typing a
+  // tag and clicking Save without pressing Enter used to silently drop it.
+  function commitTagInput(){
+    const input = $('#tagInput');
+    const v = input.value.trim().replace(/,$/,'');
+    if(v && !pendingTags.includes(v)){
+      pendingTags.push(v);
+      renderTagBox();
+    }
+    input.value = '';
+  }
+  $('#tagInput').addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' || e.key === ','){
+      e.preventDefault();
+      commitTagInput();
+    } else if(e.key === 'Backspace' && !e.target.value && pendingTags.length){
+      pendingTags.pop();
+      renderTagBox();
+    }
+  });
+  $('#tagInput').addEventListener('blur', commitTagInput);
+
+  /* Save */
+  $('#saveBtn').addEventListener('click', async ()=>{
+    commitTagInput();
+    const storyText = $('#storyText').value;
+    if(!storyText.trim()){
+      showToast('Добавь текст сторика');
+      $('#storyText').focus();
+      return;
+    }
+    const geo = $('#geoInput').value.trim().toUpperCase().slice(0,2);
+    const entry = {
+      id: editingId || uid(),
+      storyText: storyText,
+      image: pendingImage,
+      aspect: pendingAspect,
+      geo: geo,
+      tested: pendingTested,
+      sentiment: pendingSentiment,
+      tags: pendingTags,
+      linkComment: $('#linkComment').value.trim(),
+      linkButton: $('#linkButton').value.trim(),
+      comment: $('#commentText').value.trim(),
+      active: editingId ? (entries.find(e=>e.id===editingId)||{}).active !== false : true,
+      createdAt: editingId ? (entries.find(e=>e.id===editingId)||{}).createdAt || Date.now() : Date.now()
+    };
+    try{
+      await dbPut(entry);
+    }catch(err){
+      showToast('Не сохранилось — фото слишком большое?');
+      console.error(err);
+      return;
+    }
+    const idx = entries.findIndex(e=>e.id===entry.id);
+    if(idx>=0) entries[idx] = entry; else entries.push(entry);
+    closeModal();
+    render();
+    showToast(editingId ? 'Сохранено' : 'Добавлено');
+  });
+
+  /* ---------------- Init ---------------- */
+  async function init(){
+    fillGeoDatalist();
+    try{
+      db = await openDB();
+      entries = await dbGetAll();
+    }catch(err){
+      console.error('IndexedDB недоступен', err);
+      showToast('Хранилище браузера недоступно');
+    }
+    render();
+  }
+  init();
+
+})();
+</script>
+</body>
+</html>
