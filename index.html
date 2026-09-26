@@ -30,7 +30,33 @@
     --line:rgba(43,32,21,0.14);
     --shadow:0 1px 2px rgba(91,33,20,0.06);
     --radius:14px;
+    --heading-strong:#5B2114;
+    --surface:#fff;
+    --header-bg:rgba(251,244,231,0.88);
     font-size:16px;
+  }
+  :root[data-theme="dark"]{
+    --sand-50:#1C1611;
+    --sand-100:#26201A;
+    --sand-200:#382E23;
+    --clay-500:#D9713F;
+    --clay-600:#E68952;
+    --clay-700:#F0A576;
+    --gold-400:#E0A85A;
+    --gold-500:#D08F3E;
+    --sage-600:#6FA85C;
+    --sage-700:#87C273;
+    --red-600:#E06A6A;
+    --red-700:#EE8A8A;
+    --blue-500:#5A93D6;
+    --blue-600:#78ABE8;
+    --ink-900:#F2E6D8;
+    --ink-600:#C9B79E;
+    --line:rgba(242,230,216,0.16);
+    --shadow:0 1px 2px rgba(0,0,0,0.4);
+    --heading-strong:#E0A85A;
+    --surface:#2B2119;
+    --header-bg:rgba(28,22,17,0.88);
   }
   *{box-sizing:border-box;}
   .lock-overlay{
@@ -39,7 +65,7 @@
   }
   .lock-overlay.hidden{display:none;}
   .lock-card{
-    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
     box-shadow:0 12px 32px rgba(91,33,20,0.14);
     padding:36px 32px;max-width:340px;width:100%;text-align:center;
   }
@@ -68,7 +94,7 @@
     font-family:'Archivo',sans-serif;
     min-height:100vh;
   }
-  ::selection{background:var(--gold-400);color:var(--rust-800);}
+  ::selection{background:var(--gold-400);color:var(--heading-strong);}
 
   a{color:var(--clay-600);}
 
@@ -79,7 +105,7 @@
     padding:18px 28px;
     border-bottom:1px solid var(--line);
     position:sticky;top:0;z-index:20;
-    background:rgba(251,244,231,0.88);
+    background:var(--header-bg, rgba(251,244,231,0.88));
     backdrop-filter:blur(8px);
   }
   .brand{display:flex;align-items:center;gap:10px;}
@@ -97,7 +123,7 @@
     font-size:1.28rem;
     letter-spacing:-0.01em;
     margin:0;
-    color:var(--rust-800);
+    color:var(--heading-strong);
   }
   .brand .count{
     font-size:0.82rem;color:var(--ink-600);
@@ -118,6 +144,24 @@
   .btn-ghost{background:transparent;color:var(--ink-900);border:1px solid var(--line);}
   .btn-ghost:hover{background:var(--sand-100);}
   .btn-small{padding:7px 11px;font-size:0.8rem;border-radius:8px;}
+  #selectModeBtn.is-active{background:var(--clay-500);border-color:var(--clay-500);color:var(--sand-50);}
+  #themeToggleBtn{font-size:1rem;padding:9px 12px;}
+
+  .bulk-bar{
+    display:flex;align-items:center;gap:8px;
+    padding:12px 28px;border-bottom:1px solid var(--line);
+    background:var(--sand-100);
+  }
+  .bulk-bar #bulkCount{font-size:0.86rem;font-weight:600;color:var(--ink-900);}
+  .card-select-dot{
+    position:absolute;top:8px;left:8px;z-index:2;
+    width:22px;height:22px;border-radius:6px;
+    background:rgba(251,244,231,0.9);border:1.5px solid var(--line);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .card-select-dot input{margin:0;width:15px;height:15px;accent-color:var(--clay-500);cursor:pointer;}
+  .card.is-selected{outline:3px solid var(--clay-500);outline-offset:-1px;}
+  .grid.select-mode .badges{left:34px;}
 
   /* ---------- Controls ---------- */
   .controls{
@@ -139,6 +183,11 @@
     appearance:none;-webkit-appearance:none;
     font-family:'Archivo',sans-serif;font-size:0.85rem;color:var(--ink-900);cursor:pointer;
   }
+  :root[data-theme="dark"] select.pick{
+    background:var(--sand-50) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%23C9B79E"/></svg>') no-repeat right 12px center;
+  }
+  :root[data-theme="dark"] .search-wrap svg path,
+  :root[data-theme="dark"] .search-wrap svg circle{stroke:#C9B79E;}
   .spacer{flex:1;}
   .tile-size{
     display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--ink-600);
@@ -155,7 +204,7 @@
   .empty{
     text-align:center;padding:80px 20px;color:var(--ink-600);
   }
-  .empty .big{font-family:'Fraunces',serif;font-size:1.4rem;color:var(--rust-800);margin-bottom:6px;}
+  .empty .big{font-family:'Fraunces',serif;font-size:1.4rem;color:var(--heading-strong);margin-bottom:6px;}
 
   .card{
     background:var(--sand-100);
@@ -237,7 +286,7 @@
   .status-toggle.is-active .knob{transform:translateX(16px);}
   .reject-toggle{
     flex:none;width:26px;height:22px;border-radius:6px;
-    background:#fff;border:1.5px solid var(--red-600);color:var(--red-600);
+    background:var(--surface);border:1.5px solid var(--red-600);color:var(--red-600);
     cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;
     transition:background .15s ease,color .15s ease;
   }
@@ -278,7 +327,7 @@
     padding:18px 22px;border-bottom:1px solid var(--line);
   }
   .modal-head h2{
-    font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;margin:0;color:var(--rust-800);
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;margin:0;color:var(--heading-strong);
   }
   .modal-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--ink-600);line-height:1;padding:4px;}
   .modal-body{padding:20px 22px;display:flex;flex-direction:column;gap:16px;max-height:72vh;overflow-y:auto;}
@@ -288,14 +337,14 @@
   textarea,input[type=text],input[type=url]{
     font-family:'Archivo',sans-serif;font-size:0.9rem;color:var(--ink-900);
     border:1px solid var(--line);border-radius:10px;padding:10px 12px;
-    background:#fff;width:100%;
+    background:var(--surface);width:100%;
   }
   textarea{resize:vertical;min-height:100px;line-height:1.45;white-space:pre-wrap;}
   textarea:focus,input:focus,select:focus{outline:2px solid var(--gold-400);outline-offset:1px;}
   .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .pill-group{display:flex;gap:8px;flex-wrap:wrap;}
   .pill{
-    border:1px solid var(--line);background:#fff;color:var(--ink-600);
+    border:1px solid var(--line);background:var(--surface);color:var(--ink-600);
     padding:8px 14px;border-radius:20px;font-size:0.84rem;cursor:pointer;font-weight:600;
     transition:all .12s ease;
   }
@@ -308,7 +357,7 @@
 
   .drop{
     border:1.5px dashed var(--line);border-radius:12px;padding:18px;
-    display:flex;align-items:center;gap:14px;cursor:pointer;background:#fff;
+    display:flex;align-items:center;gap:14px;cursor:pointer;background:var(--surface);
   }
   .drop:hover{border-color:var(--clay-500);}
   .drop .preview{
@@ -321,16 +370,17 @@
 
   .tagbox{
     display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--line);border-radius:10px;
-    padding:8px;background:#fff;min-height:44px;align-items:center;
+    padding:8px;background:var(--surface);min-height:44px;align-items:center;
   }
-  .tagbox .tag-chip{background:var(--sand-100);cursor:default;display:flex;align-items:center;gap:5px;}
+  .tagbox .tag-chip{background:var(--sand-100);cursor:grab;display:flex;align-items:center;gap:5px;}
+  .tagbox .tag-chip.dragging{opacity:0.4;}
   .tagbox .tag-chip button{background:none;border:none;cursor:pointer;color:var(--ink-600);font-size:0.8rem;padding:0;}
   .tag-color-dot{
     width:14px;height:14px;border-radius:50%;flex:none;cursor:pointer;
     border:1px solid var(--line);display:inline-block;position:relative;
   }
   .color-palette-popover{
-    position:absolute;z-index:1000;background:#fff;border:1px solid var(--line);border-radius:12px;
+    position:absolute;z-index:1000;background:var(--surface);border:1px solid var(--line);border-radius:12px;
     padding:8px;box-shadow:0 8px 24px rgba(43,32,21,0.18);display:flex;flex-wrap:wrap;gap:6px;width:176px;
   }
   .palette-swatch{
@@ -338,7 +388,7 @@
   }
   .palette-swatch:hover{transform:scale(1.12);}
   .palette-clear{
-    background:#fff;color:var(--ink-600);display:flex;align-items:center;justify-content:center;
+    background:var(--surface);color:var(--ink-600);display:flex;align-items:center;justify-content:center;
     font-size:0.75rem;border:1px solid var(--line);
   }
   .tagbox input{border:none;flex:1;min-width:90px;padding:4px;font-size:0.84rem;}
@@ -441,10 +491,25 @@
     <span class="count" id="countLabel">0 сториков</span>
   </div>
   <div style="display:flex;gap:8px;">
+    <button class="btn btn-ghost" id="themeToggleBtn" title="Переключить тему">🌙</button>
+    <button class="btn btn-ghost" id="selectModeBtn" title="Выбрать несколько сториков для массового действия">Выбрать</button>
+    <button class="btn btn-ghost" id="exportBtn" title="Скачать резервную копию всех сториков">Экспорт</button>
+    <button class="btn btn-ghost" id="importBtn" title="Загрузить сторики из файла резервной копии">Импорт</button>
+    <input type="file" id="importFileInput" accept="application/json" style="display:none;">
     <button class="btn btn-ghost" id="openArchiveBtn">Архив <span id="archiveCount">0</span></button>
     <button class="btn btn-primary" id="openAddBtn">+ Добавить сторис</button>
   </div>
 </header>
+
+<div class="bulk-bar" id="bulkBar" style="display:none;">
+  <span id="bulkCount">Выбрано: 0</span>
+  <div class="spacer"></div>
+  <button class="btn btn-ghost btn-small" id="bulkAllBtn">Выбрать все</button>
+  <button class="btn btn-ghost btn-small" id="bulkActiveBtn">Актив</button>
+  <button class="btn btn-ghost btn-small" id="bulkInactiveBtn">Инактив</button>
+  <button class="btn btn-ghost btn-small" id="bulkArchiveBtn" style="color:var(--heading-strong);">В архив</button>
+  <button class="btn btn-ghost btn-small" id="bulkCancelBtn">Отмена</button>
+</div>
 
 <div class="controls">
   <div class="search-wrap">
@@ -617,7 +682,7 @@
     <div class="modal-body" id="archiveBody"></div>
     <div class="modal-foot">
       <span class="req-note">Восстановленные сторики вернутся в общую сетку</span>
-      <button class="btn btn-ghost" id="clearArchiveBtn" style="color:var(--rust-800);">Очистить архив</button>
+      <button class="btn btn-ghost" id="clearArchiveBtn" style="color:var(--heading-strong);">Очистить архив</button>
     </div>
   </div>
 </div>
@@ -722,6 +787,36 @@
   let pendingTested = null;
   let pendingSentiment = null;
   let pendingTags = [];
+  let selectMode = false;
+  let selectedIds = new Set();
+
+  let tagOrder = [];
+  try{ tagOrder = JSON.parse(localStorage.getItem('sklad_tagOrder') || '[]'); }catch(e){ tagOrder = []; }
+  function saveTagOrder(){
+    try{ localStorage.setItem('sklad_tagOrder', JSON.stringify(tagOrder)); }catch(e){ /* ignore */ }
+  }
+  function tagSortIndex(tag){
+    const idx = tagOrder.indexOf(tag);
+    return idx === -1 ? Infinity : idx;
+  }
+  function sortTagsByOrder(tags){
+    return [...tags].sort((a,b)=>{
+      const ia = tagSortIndex(a), ib = tagSortIndex(b);
+      if(ia !== ib) return ia - ib;
+      return a.localeCompare(b);
+    });
+  }
+  // Moves `tag` to sit right before `beforeTag` in the persisted global tag
+  // order (or to the end when beforeTag is null). Only touches the two
+  // tags involved — everything else keeps its relative position.
+  function moveTagInOrder(tag, beforeTag){
+    if(!tagOrder.includes(tag)) tagOrder.push(tag);
+    if(beforeTag && !tagOrder.includes(beforeTag)) tagOrder.push(beforeTag);
+    tagOrder = tagOrder.filter(t=>t!==tag);
+    const idx = beforeTag ? tagOrder.indexOf(beforeTag) : tagOrder.length;
+    tagOrder.splice(idx, 0, tag);
+    saveTagOrder();
+  }
 
   const COMMON_GEOS = ['GB','PL','DE','FR','IT','ES','US','CA','AU','NL','BE','AT','CH','SE','NO','DK','FI','CZ','RO','HU','GR','PT','IE','UA','TR'];
 
@@ -747,8 +842,9 @@
   const confirmCancelBtn = $('#confirmCancelBtn');
   let confirmResolve = null;
 
-  function confirmDialog(message){
+  function confirmDialog(message, okLabel){
     confirmMessage.textContent = message;
+    confirmOkBtn.textContent = okLabel || 'Удалить';
     confirmOverlay.classList.add('open');
     return new Promise((resolve)=>{
       confirmResolve = resolve;
@@ -847,6 +943,144 @@
     });
   }
 
+  /* ---------------- Theme ---------------- */
+  const THEME_KEY = 'sklad_theme';
+  function applyTheme(theme){
+    document.documentElement.setAttribute('data-theme', theme);
+    $('#themeToggleBtn').textContent = theme === 'dark' ? '☀️' : '🌙';
+  }
+  (function initTheme(){
+    let theme = 'light';
+    try{ theme = localStorage.getItem(THEME_KEY) || 'light'; }catch(e){}
+    applyTheme(theme);
+  })();
+  $('#themeToggleBtn').addEventListener('click', ()=>{
+    const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = cur === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+  });
+
+  /* ---------------- Bulk select ---------------- */
+  const bulkBar = $('#bulkBar');
+  function updateBulkBar(){
+    $('#bulkCount').textContent = `Выбрано: ${selectedIds.size}`;
+  }
+  function exitSelectMode(){
+    selectMode = false;
+    selectedIds.clear();
+    $('#selectModeBtn').classList.remove('is-active');
+    bulkBar.style.display = 'none';
+    render();
+  }
+  $('#selectModeBtn').addEventListener('click', ()=>{
+    selectMode = !selectMode;
+    if(!selectMode){
+      exitSelectMode();
+      return;
+    }
+    selectedIds.clear();
+    $('#selectModeBtn').classList.add('is-active');
+    bulkBar.style.display = 'flex';
+    updateBulkBar();
+    render();
+  });
+  $('#bulkCancelBtn').addEventListener('click', exitSelectMode);
+  $('#bulkAllBtn').addEventListener('click', ()=>{
+    const f = currentFilters();
+    const visible = activeEntries().filter(e=>passesFilter(e,f));
+    const allSelected = visible.length > 0 && visible.every(e=>selectedIds.has(e.id));
+    if(allSelected){
+      visible.forEach(e=>selectedIds.delete(e.id));
+    }else{
+      visible.forEach(e=>selectedIds.add(e.id));
+    }
+    updateBulkBar();
+    render();
+  });
+  async function bulkSetActive(activeVal){
+    if(selectedIds.size === 0) return;
+    const ids = [...selectedIds];
+    for(const id of ids){
+      const entry = entries.find(e=>e.id===id);
+      if(!entry) continue;
+      entry.active = activeVal;
+      try{ await dbPut(entry); }catch(err){ /* skip on failure */ }
+    }
+    showToast(`Обновлено: ${ids.length}`);
+    exitSelectMode();
+  }
+  $('#bulkActiveBtn').addEventListener('click', ()=>bulkSetActive(true));
+  $('#bulkInactiveBtn').addEventListener('click', ()=>bulkSetActive(false));
+  $('#bulkArchiveBtn').addEventListener('click', async ()=>{
+    if(selectedIds.size === 0) return;
+    const ok = await confirmDialog(`Перенести выбранные сторики (${selectedIds.size}) в архив?`, 'В архив');
+    if(!ok) return;
+    const ids = [...selectedIds];
+    for(const id of ids){
+      const entry = entries.find(e=>e.id===id);
+      if(!entry) continue;
+      entry.deletedAt = Date.now();
+      try{ await dbPut(entry); }catch(err){ /* skip on failure */ }
+    }
+    showToast(`В архиве: ${ids.length}`);
+    exitSelectMode();
+  });
+
+  $('#exportBtn').addEventListener('click', ()=>{
+    try{
+      const payload = {
+        app: 'sklad-storikov',
+        exportedAt: new Date().toISOString(),
+        entries: entries
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const stamp = new Date().toISOString().slice(0,10);
+      a.href = url;
+      a.download = `sklad-storikov-backup-${stamp}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 1000);
+      showToast('Резервная копия скачана');
+    }catch(err){
+      console.error(err);
+      showToast('Не удалось создать резервную копию');
+    }
+  });
+
+  $('#importBtn').addEventListener('click', ()=>{
+    $('#importFileInput').value = '';
+    $('#importFileInput').click();
+  });
+
+  $('#importFileInput').addEventListener('change', async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    try{
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      const list = Array.isArray(parsed) ? parsed : parsed.entries;
+      if(!Array.isArray(list)) throw new Error('bad format');
+
+      const ok = await confirmDialog(`Загрузить ${list.length} сториков из файла? Записи с совпадающими id будут перезаписаны, остальные — добавлены. Существующие сторики не удаляются.`, 'Загрузить');
+      if(!ok) return;
+
+      for(const entry of list){
+        if(!entry || !entry.id) continue;
+        await dbPut(entry);
+      }
+      entries = await dbGetAll();
+      render();
+      showToast(`Импортировано: ${list.length}`);
+    }catch(err){
+      console.error(err);
+      showToast('Не удалось прочитать файл резервной копии');
+    }
+  });
+
   $('#openArchiveBtn').addEventListener('click', ()=>{
     renderArchive();
     archiveOverlay.classList.add('open');
@@ -892,7 +1126,7 @@
     const tagSel = $('#filterTag');
     const active = activeEntries();
     const geos = [...new Set(active.map(e=>e.geo).filter(Boolean))].sort();
-    const tags = [...new Set(active.flatMap(e=>e.tags||[]))].sort();
+    const tags = sortTagsByOrder([...new Set(active.flatMap(e=>e.tags||[]))]);
     const curGeo = geoSel.value, curTag = tagSel.value;
     geoSel.innerHTML = '<option value="">Гео: все</option>' + geos.map(g=>`<option value="${g}">${g}</option>`).join('');
     tagSel.innerHTML = '<option value="">Тег: любой</option>' + tags.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
@@ -1032,6 +1266,7 @@
     updateArchiveCount();
 
     grid.innerHTML = '';
+    grid.classList.toggle('select-mode', selectMode);
     emptyState.style.display = list.length ? 'none' : 'block';
 
     list.forEach(entry=>{
@@ -1049,12 +1284,13 @@
         : `<div class="noimg">без фото</div>`;
 
       const tagsRow = (entry.tags||[]).length
-        ? `<div class="tags-row">${entry.tags.map(tagChipHTML).join('')}</div>`
+        ? `<div class="tags-row">${sortTagsByOrder(entry.tags).map(tagChipHTML).join('')}</div>`
         : '';
 
       const isActive = entry.active !== false;
       const isRejected = entry.rejected === true;
-      card.className = 'card' + (isRejected ? ' is-rejected' : '');
+      const isSelected = selectedIds.has(entry.id);
+      card.className = 'card' + (isRejected ? ' is-rejected' : '') + (isSelected ? ' is-selected' : '');
 
       const copyButtons = [`<button class="btn btn-ghost copy-text-btn ${isActive ? 'status-active' : 'status-inactive'}" title="Скопировать текст сторика">Текст</button>`];
       if(entry.linkButton) copyButtons.push(`<button class="icon-btn copy-link1-btn" title="Скопировать ссылку в кнопку"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="10" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg></button>`);
@@ -1062,6 +1298,7 @@
 
       card.innerHTML = `
         <div class="thumb" data-role="thumb">
+          ${selectMode ? `<label class="card-select-dot"><input type="checkbox" data-role="select-checkbox" ${isSelected?'checked':''}></label>` : ''}
           ${thumbInner}
           <div class="badges">${badges.join('')}</div>
           <div class="badges-bottom"><span class="badge aspect">${entry.aspect==='4/5' ? '4:5' : '1:1'}</span></div>
@@ -1170,6 +1407,18 @@
           window.open(entry.linkButton, '_blank', 'noopener');
         });
       }
+      const selectCheckbox = card.querySelector('[data-role=select-checkbox]');
+      if(selectCheckbox){
+        selectCheckbox.closest('.card-select-dot').addEventListener('click', (ev)=>{
+          ev.stopPropagation();
+        });
+        selectCheckbox.addEventListener('change', ()=>{
+          if(selectCheckbox.checked) selectedIds.add(entry.id);
+          else selectedIds.delete(entry.id);
+          card.classList.toggle('is-selected', selectCheckbox.checked);
+          updateBulkBar();
+        });
+      }
 
       grid.appendChild(card);
     });
@@ -1261,7 +1510,7 @@
 
     $('#viewText').textContent = entry.storyText || '';
 
-    const tags = entry.tags || [];
+    const tags = sortTagsByOrder(entry.tags || []);
     $('#viewTags').innerHTML = tags.map(tagChipHTML).join('');
 
     const linkParts = [];
@@ -1476,14 +1725,20 @@
   });
 
   /* Tags */
+  let draggedTag = null;
   function renderTagBox(){
     const box = $('#tagBox');
     const input = $('#tagInput');
     box.querySelectorAll('.tag-chip').forEach(c=>c.remove());
+    // Keep the editor's visible order in sync with the global tag order
+    // (the same order used on cards and in the filter dropdown), so
+    // drag-and-drop here always reflects what the person will see elsewhere.
+    pendingTags = sortTagsByOrder(pendingTags);
     pendingTags.forEach(tag=>{
       const color = tagColors[tag];
       const chip = document.createElement('span');
       chip.className = 'tag-chip editable-chip';
+      chip.draggable = true;
       if(color){
         chip.style.background = color;
         chip.style.borderColor = color;
@@ -1500,6 +1755,32 @@
       });
       chip.querySelector('button[aria-label="Удалить тег"]').addEventListener('click', ()=>{
         pendingTags = pendingTags.filter(t=>t!==tag);
+        renderTagBox();
+      });
+      // Drag-n-drop reordering — lets the person set a custom tag order
+      // that's remembered globally (localStorage) and used everywhere
+      // tags are listed, including the filter dropdown.
+      chip.addEventListener('dragstart', ()=>{
+        draggedTag = tag;
+        chip.classList.add('dragging');
+      });
+      chip.addEventListener('dragend', ()=>{
+        chip.classList.remove('dragging');
+        draggedTag = null;
+      });
+      chip.addEventListener('dragover', (ev)=>{
+        ev.preventDefault();
+      });
+      chip.addEventListener('drop', (ev)=>{
+        ev.preventDefault();
+        if(!draggedTag || draggedTag === tag) return;
+        const fromIdx = pendingTags.indexOf(draggedTag);
+        const toIdx = pendingTags.indexOf(tag);
+        if(fromIdx === -1 || toIdx === -1) return;
+        pendingTags.splice(fromIdx, 1);
+        const insertAt = pendingTags.indexOf(tag);
+        pendingTags.splice(insertAt, 0, draggedTag);
+        moveTagInOrder(draggedTag, tag);
         renderTagBox();
       });
       box.insertBefore(chip, input);
