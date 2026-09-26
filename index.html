@@ -33,6 +33,8 @@
     --heading-strong:#5B2114;
     --surface:#fff;
     --header-bg:rgba(251,244,231,0.88);
+    --on-accent:#FBF4E7;
+    --on-light:#5B4C3B;
     font-size:16px;
   }
   :root[data-theme="dark"]{
@@ -59,31 +61,6 @@
     --header-bg:rgba(28,22,17,0.88);
   }
   *{box-sizing:border-box;}
-  .lock-overlay{
-    position:fixed;inset:0;z-index:5000;background:var(--sand-50);
-    display:flex;align-items:center;justify-content:center;padding:20px;
-  }
-  .lock-overlay.hidden{display:none;}
-  .lock-card{
-    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
-    box-shadow:0 12px 32px rgba(91,33,20,0.14);
-    padding:36px 32px;max-width:340px;width:100%;text-align:center;
-  }
-  .lock-logo{font-size:2.4rem;margin-bottom:6px;}
-  .lock-card h2{font-family:'Fraunces',serif;font-size:1.4rem;color:var(--ink-900);margin:0 0 4px;}
-  .lock-sub{color:var(--ink-600);font-size:0.9rem;margin:0 0 18px;}
-  .lock-card input{
-    width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;
-    font-size:0.95rem;margin-bottom:12px;text-align:center;
-  }
-  .lock-card input:focus{outline:none;border-color:var(--clay-500);}
-  .lock-card .btn{width:100%;}
-  .lock-error{color:var(--red-600);font-size:0.85rem;margin-top:10px;}
-  .lock-shake{animation:lockShake .35s;}
-  @keyframes lockShake{
-    10%,90%{transform:translateX(-2px);} 20%,80%{transform:translateX(4px);}
-    30%,50%,70%{transform:translateX(-8px);} 40%,60%{transform:translateX(8px);}
-  }
   html,body{margin:0;padding:0;}
   body{
     background:
@@ -113,7 +90,7 @@
     width:26px;height:26px;flex:none;
     display:flex;align-items:center;justify-content:center;
     font-size:15px;line-height:1;
-    background:var(--clay-500);color:var(--sand-50);
+    background:var(--clay-500);color:var(--on-accent);
     border-radius:7px;
   }
   .brand h1{
@@ -139,12 +116,12 @@
     transition:transform .12s ease, box-shadow .12s ease, background .15s ease;
   }
   .btn:active{transform:translateY(1px);}
-  .btn-primary{background:var(--clay-500);color:var(--sand-50);box-shadow:var(--shadow);}
+  .btn-primary{background:var(--clay-500);color:var(--on-accent);box-shadow:var(--shadow);}
   .btn-primary:hover{background:var(--clay-600);}
   .btn-ghost{background:transparent;color:var(--ink-900);border:1px solid var(--line);}
   .btn-ghost:hover{background:var(--sand-100);}
   .btn-small{padding:7px 11px;font-size:0.8rem;border-radius:8px;}
-  #selectModeBtn.is-active{background:var(--clay-500);border-color:var(--clay-500);color:var(--sand-50);}
+  #selectModeBtn.is-active{background:var(--clay-500);border-color:var(--clay-500);color:var(--on-accent);}
   #themeToggleBtn{font-size:1rem;padding:9px 12px;}
 
   .bulk-bar{
@@ -239,12 +216,12 @@
     backdrop-filter:blur(3px);
     box-shadow:0 1px 3px rgba(0,0,0,0.15);
   }
-  .badge.geo{background:rgba(43,32,21,0.82);color:var(--sand-50);}
-  .badge.tested{background:var(--clay-500);color:var(--sand-50);}
-  .badge.nottested{background:rgba(251,244,231,0.92);color:var(--ink-600);border:1px solid var(--line);}
-  .badge.pos{background:var(--sage-600);color:var(--sand-50);}
-  .badge.neg{background:var(--red-600);color:var(--sand-50);}
-  .badge.aspect{background:rgba(251,244,231,0.92);color:var(--ink-600);border:1px solid var(--line);}
+  .badge.geo{background:rgba(43,32,21,0.82);color:var(--on-accent);}
+  .badge.tested{background:var(--clay-500);color:var(--on-accent);}
+  .badge.nottested{background:rgba(251,244,231,0.92);color:var(--on-light);border:1px solid var(--line);}
+  .badge.pos{background:var(--sage-600);color:var(--on-accent);}
+  .badge.neg{background:var(--red-600);color:var(--on-accent);}
+  .badge.aspect{background:rgba(251,244,231,0.92);color:var(--on-light);border:1px solid var(--line);}
   .badges-bottom{
     position:absolute;bottom:8px;right:8px;display:flex;gap:5px;
   }
@@ -316,6 +293,7 @@
     padding:5vh 16px;overflow-y:auto;z-index:100;
   }
   .overlay.open{display:flex;}
+  #confirmOverlay{align-items:center;}
   .modal{
     background:var(--sand-50);border-radius:18px;
     width:100%;max-width:560px;
@@ -368,6 +346,24 @@
   .drop .txt{font-size:0.82rem;color:var(--ink-600);}
   .drop .txt b{color:var(--ink-900);}
 
+  .story-texts-list{display:flex;flex-direction:column;gap:10px;}
+  .story-text-item{
+    border:1px solid var(--line);border-radius:12px;padding:10px;
+    display:flex;flex-direction:column;gap:6px;background:var(--surface);
+  }
+  .story-text-head{display:flex;gap:8px;align-items:center;}
+  .story-text-name{
+    flex:1;font-family:'Archivo',sans-serif;font-size:0.84rem;color:var(--ink-900);
+    border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:var(--sand-50);
+  }
+  .story-text-item textarea{border-color:var(--line);}
+  .story-text-item .remove-text-btn{
+    flex:none;width:28px;height:28px;border-radius:6px;
+    background:var(--surface);border:1px solid var(--line);color:var(--ink-600);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;
+  }
+  .story-text-item .remove-text-btn:hover{background:var(--sand-100);}
+
   .tagbox{
     display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--line);border-radius:10px;
     padding:8px;background:var(--surface);min-height:44px;align-items:center;
@@ -394,6 +390,19 @@
   .tagbox input{border:none;flex:1;min-width:90px;padding:4px;font-size:0.84rem;}
   .tagbox input:focus{outline:none;}
 
+  .text-picker-popover{
+    position:absolute;z-index:1000;background:var(--surface);border:1px solid var(--line);border-radius:12px;
+    padding:6px;box-shadow:0 8px 24px rgba(43,32,21,0.18);display:flex;flex-direction:column;gap:2px;
+    width:220px;max-height:260px;overflow-y:auto;
+  }
+  .text-picker-item{
+    display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+    padding:8px 10px;border-radius:8px;border:none;background:transparent;cursor:pointer;text-align:left;width:100%;
+  }
+  .text-picker-item:hover{background:var(--sand-100);}
+  .text-picker-title{font-size:0.78rem;font-weight:700;color:var(--ink-900);}
+  .text-picker-preview{font-size:0.72rem;color:var(--ink-600);line-height:1.3;}
+
   .modal-foot{
     padding:16px 22px;border-top:1px solid var(--line);
     display:flex;justify-content:space-between;align-items:center;gap:10px;
@@ -415,7 +424,7 @@
 
   .toast{
     position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
-    background:var(--rust-800);color:var(--sand-50);
+    background:var(--rust-800);color:var(--on-accent);
     padding:10px 18px;border-radius:10px;font-size:0.85rem;
     box-shadow:0 8px 20px rgba(0,0,0,0.25);
     opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;
@@ -430,10 +439,17 @@
   .view-badges{display:flex;gap:6px;flex-wrap:wrap;}
   .view-image{width:100%;max-height:380px;border-radius:12px;overflow:hidden;background:var(--sand-100);}
   .view-image img{width:100%;max-height:380px;object-fit:contain;display:block;}
-  .view-text{
+  .view-text{display:flex;flex-direction:column;gap:14px;}
+  .view-text-block{
+    border:1px solid var(--line);border-radius:12px;padding:12px;
+    display:flex;flex-direction:column;gap:8px;background:var(--surface);
+  }
+  .view-text-label{font-size:0.74rem;font-weight:700;color:var(--ink-600);text-transform:uppercase;letter-spacing:.02em;}
+  .view-text-body{
     white-space:pre-wrap;word-wrap:break-word;
     font-size:0.94rem;line-height:1.6;color:var(--ink-900);
   }
+  .view-text-copy{align-self:flex-start;}
   .view-links{display:flex;flex-direction:column;gap:12px;font-size:0.84rem;}
   .view-links a{word-break:break-all;color:var(--clay-600);}
   .view-links .link-label{color:var(--ink-600);font-weight:600;margin-right:4px;}
@@ -444,7 +460,7 @@
   #archiveCount{
     display:inline-flex;align-items:center;justify-content:center;
     min-width:18px;height:18px;padding:0 5px;
-    background:var(--clay-500);color:var(--sand-50);
+    background:var(--clay-500);color:var(--on-accent);
     border-radius:20px;font-size:0.7rem;font-weight:700;
     margin-left:2px;
   }
@@ -470,19 +486,6 @@
 </style>
 </head>
 <body>
-
-<div id="lockOverlay" class="lock-overlay">
-  <div class="lock-card">
-    <div class="lock-logo">🏺</div>
-    <h2>Склад сториков</h2>
-    <p class="lock-sub">Введите пароль для доступа</p>
-    <div id="lockForm">
-      <input type="password" id="lockPassword" placeholder="Пароль" autocomplete="current-password">
-      <button type="button" id="lockSubmitBtn" class="btn btn-primary">Войти</button>
-    </div>
-    <div class="lock-error" id="lockError" style="display:none;">Неверный пароль</div>
-  </div>
-</div>
 
 <header class="top">
   <div class="brand">
@@ -559,8 +562,9 @@
     <div class="modal-body">
 
       <div class="form-row">
-        <label>Текст сторика *</label>
-        <textarea id="storyText" placeholder="Вставь полный текст сторика — с эмодзи и отступами, как есть"></textarea>
+        <label>Текст сторика * <span class="hint">можно добавить несколько вариантов</span></label>
+        <div id="storyTextsList" class="story-texts-list"></div>
+        <button type="button" class="btn btn-ghost btn-small" id="addStoryTextBtn" style="align-self:flex-start;">+ Добавить ещё текст</button>
       </div>
 
       <div class="form-row">
@@ -693,48 +697,6 @@
 (function(){
   "use strict";
 
-  /* ---------------- Password lock ---------------- */
-  // Смени пароль здесь ↓
-  const LOCK_PASSWORD = 'storiki2026';
-  const LOCK_KEY = 'sklad_unlocked';
-
-  (function initLock(){
-    const overlay = document.getElementById('lockOverlay');
-    const submitBtn = document.getElementById('lockSubmitBtn');
-    const input = document.getElementById('lockPassword');
-    const errorEl = document.getElementById('lockError');
-
-    if(localStorage.getItem(LOCK_KEY) === 'yes'){
-      overlay.classList.add('hidden');
-      return;
-    }
-
-    function tryUnlock(){
-      if(input.value === LOCK_PASSWORD){
-        try{ localStorage.setItem(LOCK_KEY, 'yes'); }catch(err){}
-        overlay.classList.add('hidden');
-      }else{
-        errorEl.style.display = 'block';
-        const card = overlay.querySelector('.lock-card');
-        card.classList.remove('lock-shake');
-        void card.offsetWidth;
-        card.classList.add('lock-shake');
-        input.value = '';
-        input.focus();
-      }
-    }
-
-    submitBtn.addEventListener('click', tryUnlock);
-    input.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter'){
-        e.preventDefault();
-        tryUnlock();
-      }
-    });
-
-    setTimeout(()=>input.focus(), 50);
-  })();
-
   /* ---------------- IndexedDB layer ---------------- */
   const DB_NAME = 'sklad-storikov';
   const STORE = 'entries';
@@ -842,6 +804,13 @@
   const confirmCancelBtn = $('#confirmCancelBtn');
   let confirmResolve = null;
 
+  // Before any story-text copy actually hits the clipboard, this asks the
+  // person to confirm the name inside the text matches the funnel/page name
+  // — a manual sanity check so a mismatched variant never goes out by accident.
+  async function copyTextWithConfirm(text, btnEl){
+    const ok = await confirmDialog('Имя в тексте соответствует имени фанки?', 'Да');
+    if(ok) copyPlain(text, btnEl);
+  }
   function confirmDialog(message, okLabel){
     confirmMessage.textContent = message;
     confirmOkBtn.textContent = okLabel || 'Удалить';
@@ -1203,12 +1172,66 @@
     setTimeout(()=>document.addEventListener('click', onDocClickForPopover), 0);
   }
 
+  // Popover for picking which text variant to copy when a card has more
+  // than one. Shown from the card's "Текст" button — with a single text
+  // there's nothing to choose, so the button still just copies directly.
+  let textPopoverEl = null;
+  function closeTextPopover(){
+    if(textPopoverEl){
+      textPopoverEl.remove();
+      textPopoverEl = null;
+      document.removeEventListener('click', onDocClickForTextPopover);
+    }
+  }
+  function onDocClickForTextPopover(e){
+    if(textPopoverEl && !textPopoverEl.contains(e.target)) closeTextPopover();
+  }
+  function openTextPicker(anchorEl, texts, onPick){
+    closeTextPopover();
+    closeColorPopover();
+    const pop = document.createElement('div');
+    pop.className = 'text-picker-popover';
+    pop.innerHTML = texts.map((t, i)=>{
+      const full = previewText(t.text);
+      const preview = full.slice(0, 60);
+      return `<button type="button" class="text-picker-item" data-idx="${i}">
+        <span class="text-picker-title">${esc(textLabel(t, i))}</span>
+        <span class="text-picker-preview">${esc(preview)}${full.length > 60 ? '…' : ''}</span>
+      </button>`;
+    }).join('');
+    document.body.appendChild(pop);
+    const rect = anchorEl.getBoundingClientRect();
+    pop.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+    pop.style.left = Math.min(rect.left + window.scrollX, window.innerWidth - 240) + 'px';
+    pop.querySelectorAll('.text-picker-item').forEach(btn=>{
+      btn.addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        onPick(Number(btn.dataset.idx));
+        closeTextPopover();
+      });
+    });
+    textPopoverEl = pop;
+    setTimeout(()=>document.addEventListener('click', onDocClickForTextPopover), 0);
+  }
+
   // Card preview strips line breaks so paragraph spacing in the pasted
   // story can't blow up the 3-line clamp into a tall empty gap; the full
   // text with its original formatting still shows in the view modal, edit
   // form and copy button.
   function previewText(s){
     return (s||'').replace(/\s+/g, ' ').trim();
+  }
+
+  // Normalizes an entry's text variants to a consistent {name, text}[]
+  // shape, regardless of how they were stored: brand-new entries save
+  // objects with a name, older ones may only have a plain string array
+  // (or just the single legacy `storyText` field) — all read the same way.
+  function normalizeTexts(entry){
+    const raw = (entry.storyTexts && entry.storyTexts.length) ? entry.storyTexts : [entry.storyText || ''];
+    return raw.map(t => (typeof t === 'string') ? {name:'', text:t} : {name: t.name||'', text: t.text||''});
+  }
+  function textLabel(t, idx){
+    return (t.name && t.name.trim()) ? t.name.trim() : `Текст ${idx+1}`;
   }
 
   // "Ссылка в комментарии" only ever needs the domain, so a long link with
@@ -1251,7 +1274,7 @@
       if(f.active === 'inactive' && isActive) return false;
     }
     if(f.q){
-      const hay = [e.storyText, e.comment, e.geo, e.linkComment, e.linkButton, ...(e.tags||[])].join(' ').toLowerCase();
+      const hay = [...normalizeTexts(e).flatMap(t=>[t.name, t.text]), e.comment, e.geo, e.linkComment, e.linkButton, ...(e.tags||[])].join(' ').toLowerCase();
       if(!hay.includes(f.q)) return false;
     }
     return true;
@@ -1290,6 +1313,7 @@
       const isActive = entry.active !== false;
       const isRejected = entry.rejected === true;
       const isSelected = selectedIds.has(entry.id);
+      const entryTexts = normalizeTexts(entry);
       card.className = 'card' + (isRejected ? ' is-rejected' : '') + (isSelected ? ' is-selected' : '');
 
       const copyButtons = [`<button class="btn btn-ghost copy-text-btn ${isActive ? 'status-active' : 'status-inactive'}" title="Скопировать текст сторика">Текст</button>`];
@@ -1301,11 +1325,14 @@
           ${selectMode ? `<label class="card-select-dot"><input type="checkbox" data-role="select-checkbox" ${isSelected?'checked':''}></label>` : ''}
           ${thumbInner}
           <div class="badges">${badges.join('')}</div>
-          <div class="badges-bottom"><span class="badge aspect">${entry.aspect==='4/5' ? '4:5' : '1:1'}</span></div>
+          <div class="badges-bottom">
+            ${entryTexts.length > 1 ? `<span class="badge aspect" title="Вариантов текста: ${entryTexts.length}">✎×${entryTexts.length}</span>` : ''}
+            <span class="badge aspect">${entry.aspect==='4/5' ? '4:5' : '1:1'}</span>
+          </div>
           ${isRejected ? '<div class="reject-stamp">Reject</div>' : ''}
         </div>
         <div class="card-body">
-          <div class="story-preview">${esc(previewText(entry.storyText))}</div>
+          <div class="story-preview">${esc(previewText(entryTexts[0].text))}</div>
           ${tagsRow}
           <div class="card-actions">
             <div class="copy-row">${copyButtons.join('')}</div>
@@ -1336,7 +1363,14 @@
       });
       card.querySelector('.copy-text-btn').addEventListener('click', (ev)=>{
         ev.stopPropagation();
-        copyPlain(entry.storyText || '', ev.currentTarget);
+        const target = ev.currentTarget;
+        if(entryTexts.length > 1){
+          openTextPicker(target, entryTexts, (idx)=>{
+            copyTextWithConfirm(entryTexts[idx].text || '', target);
+          });
+        } else {
+          copyTextWithConfirm(entryTexts[0].text || '', target);
+        }
       });
       const l1btn = card.querySelector('.copy-link1-btn');
       if(l1btn) l1btn.addEventListener('click', (ev)=>{
@@ -1508,7 +1542,20 @@
       imgWrap.innerHTML = '';
     }
 
-    $('#viewText').textContent = entry.storyText || '';
+    const viewTexts = normalizeTexts(entry);
+    $('#viewText').innerHTML = viewTexts.map((t, i)=>`
+      <div class="view-text-block">
+        <div class="view-text-label">${esc(textLabel(t, i))}</div>
+        <div class="view-text-body">${esc(t.text)}</div>
+        <button type="button" class="btn btn-ghost btn-small view-text-copy" data-idx="${i}">Копировать</button>
+      </div>
+    `).join('');
+    $('#viewText').querySelectorAll('.view-text-copy').forEach(btn=>{
+      btn.addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        copyTextWithConfirm(viewTexts[Number(btn.dataset.idx)].text || '', btn);
+      });
+    });
 
     const tags = sortTagsByOrder(entry.tags || []);
     $('#viewTags').innerHTML = tags.map(tagChipHTML).join('');
@@ -1543,7 +1590,7 @@
 
   $('#viewCopyTextBtn').addEventListener('click', (ev)=>{
     if(!viewingEntry) return;
-    copyPlain(viewingEntry.storyText || '', ev.currentTarget);
+    copyTextWithConfirm(viewingEntry.storyText || '', ev.currentTarget);
   });
   $('#viewCopyLink1Btn').addEventListener('click', (ev)=>{
     if(!viewingEntry) return;
@@ -1581,6 +1628,52 @@
   });
 
   /* ---------------- Modal logic ---------------- */
+  // Renders the repeatable "story text" boxes in the add/edit form. Always
+  // shows at least one textarea; a remove (✕) button appears on each box
+  // once there's more than one, so the person can add several text
+  // variants for the same photo/geo/tags and copy whichever one they need.
+  function renderStoryTextsList(items){
+    const list = $('#storyTextsList');
+    const values = (items && items.length) ? items : [{name:'', text:''}];
+    list.innerHTML = '';
+    values.forEach((val, idx)=>{
+      const item = document.createElement('div');
+      item.className = 'story-text-item';
+      item.innerHTML = `
+        <div class="story-text-head">
+          <input type="text" class="story-text-name" placeholder="${values.length > 1 ? `Имя (по умолчанию «Текст ${idx+1}»)` : 'Имя (необязательно)'}">
+          ${values.length > 1 ? `<button type="button" class="remove-text-btn" title="Удалить этот текст">✕</button>` : ''}
+        </div>
+        <textarea placeholder="Вставь полный текст сторика — с эмодзи и отступами, как есть"></textarea>
+      `;
+      item.querySelector('.story-text-name').value = val.name || '';
+      item.querySelector('textarea').value = val.text || '';
+      const removeBtn = item.querySelector('.remove-text-btn');
+      if(removeBtn){
+        removeBtn.addEventListener('click', ()=>{
+          const current = getStoryTextsFromForm();
+          current.splice(idx, 1);
+          renderStoryTextsList(current.length ? current : [{name:'', text:''}]);
+        });
+      }
+      list.appendChild(item);
+    });
+  }
+  function getStoryTextsFromForm(){
+    return [...document.querySelectorAll('#storyTextsList .story-text-item')].map(item=>({
+      name: item.querySelector('.story-text-name').value.trim(),
+      text: item.querySelector('textarea').value
+    }));
+  }
+  $('#addStoryTextBtn').addEventListener('click', ()=>{
+    const current = getStoryTextsFromForm();
+    current.push({name:'', text:''});
+    renderStoryTextsList(current);
+    const boxes = document.querySelectorAll('#storyTextsList textarea');
+    const last = boxes[boxes.length-1];
+    if(last) last.focus();
+  });
+
   function resetForm(){
     editingId = null;
     pendingImage = null;
@@ -1588,7 +1681,7 @@
     pendingTested = null;
     pendingSentiment = null;
     pendingTags = [];
-    $('#storyText').value = '';
+    renderStoryTextsList([{name:'', text:''}]);
     $('#geoInput').value = '';
     $('#linkComment').value = '';
     $('#linkButton').value = '';
@@ -1607,7 +1700,10 @@
     resetForm();
     $('#modalTitle').textContent = 'Новый сторик';
     overlay.classList.add('open');
-    setTimeout(()=>$('#storyText').focus(), 50);
+    setTimeout(()=>{
+      const first = $('#storyTextsList textarea');
+      if(first) first.focus();
+    }, 50);
   }
 
   function openEdit(id){
@@ -1616,7 +1712,7 @@
     resetForm();
     editingId = id;
     $('#modalTitle').textContent = 'Редактировать сторик';
-    $('#storyText').value = entry.storyText || '';
+    renderStoryTextsList(normalizeTexts(entry));
     $('#geoInput').value = entry.geo || '';
     $('#linkComment').value = entry.linkComment || '';
     $('#linkButton').value = entry.linkButton || '';
@@ -1812,16 +1908,21 @@
   /* Save */
   $('#saveBtn').addEventListener('click', async ()=>{
     commitTagInput();
-    const storyText = $('#storyText').value;
-    if(!storyText.trim()){
+    const storyTexts = getStoryTextsFromForm()
+      .map(t=>({name: t.name.trim(), text: t.text.trim()}))
+      .filter(t=>t.text);
+    if(!storyTexts.length){
       showToast('Добавь текст сторика');
-      $('#storyText').focus();
+      const first = $('#storyTextsList textarea');
+      if(first) first.focus();
       return;
     }
     const geo = $('#geoInput').value.trim().toUpperCase().slice(0,2);
+    const prevEntry = editingId ? (entries.find(e=>e.id===editingId)||{}) : {};
     const entry = {
       id: editingId || uid(),
-      storyText: storyText,
+      storyText: storyTexts[0].text,
+      storyTexts: storyTexts,
       image: pendingImage,
       aspect: pendingAspect,
       geo: geo,
@@ -1831,8 +1932,10 @@
       linkComment: $('#linkComment').value.trim(),
       linkButton: $('#linkButton').value.trim(),
       comment: $('#commentText').value.trim(),
-      active: editingId ? (entries.find(e=>e.id===editingId)||{}).active !== false : true,
-      createdAt: editingId ? (entries.find(e=>e.id===editingId)||{}).createdAt || Date.now() : Date.now()
+      active: editingId ? prevEntry.active !== false : true,
+      rejected: editingId ? prevEntry.rejected === true : false,
+      deletedAt: editingId ? (prevEntry.deletedAt || null) : null,
+      createdAt: editingId ? (prevEntry.createdAt || Date.now()) : Date.now()
     };
     try{
       await dbPut(entry);
