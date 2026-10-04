@@ -200,7 +200,7 @@
     background:var(--sand-200);
     overflow:hidden;cursor:pointer;
   }
-  .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .thumb img,.thumb video{width:100%;height:100%;object-fit:cover;display:block;}
   .thumb .noimg{
     width:100%;height:100%;display:flex;align-items:center;justify-content:center;
     color:var(--ink-600);font-size:0.78rem;text-align:center;padding:10px;
@@ -294,6 +294,16 @@
   }
   .overlay.open{display:flex;}
   #confirmOverlay{align-items:center;}
+  .confirm-name{
+    display:inline-block;
+    font-size:1.3em;
+    font-weight:800;
+    color:var(--accent-700, #b3410f);
+    background:var(--accent-100, #ffe3d1);
+    padding:2px 10px;
+    border-radius:8px;
+    margin:0 2px;
+  }
   .modal{
     background:var(--sand-50);border-radius:18px;
     width:100%;max-width:560px;
@@ -342,7 +352,7 @@
     width:64px;height:64px;border-radius:8px;overflow:hidden;background:var(--sand-100);
     flex:none;display:flex;align-items:center;justify-content:center;font-size:0.65rem;color:var(--ink-600);text-align:center;
   }
-  .drop .preview img{width:100%;height:100%;object-fit:cover;}
+  .drop .preview img,.drop .preview video{width:100%;height:100%;object-fit:cover;}
   .drop .txt{font-size:0.82rem;color:var(--ink-600);}
   .drop .txt b{color:var(--ink-900);}
 
@@ -438,7 +448,7 @@
   .view-modal .modal-body{gap:14px;}
   .view-badges{display:flex;gap:6px;flex-wrap:wrap;}
   .view-image{width:100%;max-height:380px;border-radius:12px;overflow:hidden;background:var(--sand-100);}
-  .view-image img{width:100%;max-height:380px;object-fit:contain;display:block;}
+  .view-image img,.view-image video{width:100%;max-height:380px;object-fit:contain;display:block;}
   .view-text{display:flex;flex-direction:column;gap:14px;}
   .view-text-block{
     border:1px solid var(--line);border-radius:12px;padding:12px;
@@ -568,12 +578,12 @@
       </div>
 
       <div class="form-row">
-        <label>Фото</label>
+        <label>Фото / видео</label>
         <div class="drop" id="dropZone">
-          <div class="preview" id="imgPreview">нет фото</div>
-          <div class="txt"><b>Нажми, чтобы выбрать фото</b><br>1:1 или 4:5 — как есть, не обрезаем</div>
+          <div class="preview" id="imgPreview">нет медиа</div>
+          <div class="txt"><b>Нажми, чтобы выбрать фото или видео</b><br>1:1 или 4:5 — как есть, не обрезаем</div>
         </div>
-        <input type="file" id="fileInput" accept="image/*" style="display:none;">
+        <input type="file" id="fileInput" accept="image/*,video/*" style="display:none;">
         <div class="aspect-toggle">
           <button type="button" class="pill" data-ar="1/1">1:1</button>
           <button type="button" class="pill" data-ar="4/5">4:5</button>
@@ -744,7 +754,8 @@
   /* ---------------- State ---------------- */
   let entries = [];
   let editingId = null;
-  let pendingImage = null; // dataURL
+  let pendingImage = null; // dataURL (photo or video)
+  let pendingMediaType = 'image'; // 'image' | 'video'
   let pendingAspect = '1/1';
   let pendingTested = null;
   let pendingSentiment = null;
@@ -804,15 +815,41 @@
   const confirmCancelBtn = $('#confirmCancelBtn');
   let confirmResolve = null;
 
+  // Tries to pull a self-introduced name out of the story text, e.g.
+  // "my name is Amelia" / "I'm Chloe" / "I am Chloe" (case-insensitive).
+  // Returns null when no such pattern is found — texts don't always have one.
+  function extractNameFromText(text){
+    if(!text) return null;
+    const patterns = [
+      /\bmy name is\s+([A-Za-zÀ-ÿА-Яа-яЁё]+)/i,
+      /\bi\s*'?\s*am\s+([A-Za-zÀ-ÿА-Яа-яЁё]+)/i,
+      /\bi\s*'?\s*m\s+([A-Za-zÀ-ÿА-Яа-яЁё]+)/i
+    ];
+    for(const re of patterns){
+      const m = text.match(re);
+      if(m && m[1]) return m[1];
+    }
+    return null;
+  }
+
   // Before any story-text copy actually hits the clipboard, this asks the
   // person to confirm the name inside the text matches the funnel/page name
   // — a manual sanity check so a mismatched variant never goes out by accident.
+  // When a name can be spotted in the text itself, it's named directly in the
+  // question; otherwise falls back to the generic phrasing.
   async function copyTextWithConfirm(text, btnEl){
-    const ok = await confirmDialog('Имя в тексте соответствует имени фанки?', 'Да');
+    const foundName = extractNameFromText(text);
+    const message = foundName
+      ? `Имя <span class="confirm-name">${esc(foundName)}</span> в тексте соответствует имени фанки?`
+      : 'Имя в тексте соответствует имени фанки?';
+    const ok = await confirmDialog(message, 'Да');
     if(ok) copyPlain(text, btnEl);
   }
+  // `message` may contain simple inline markup (used to highlight an
+  // extracted name), so it's set via innerHTML — every call site passes a
+  // static string or the escaped `esc()` value above, never raw user text.
   function confirmDialog(message, okLabel){
-    confirmMessage.textContent = message;
+    confirmMessage.innerHTML = message;
     confirmOkBtn.textContent = okLabel || 'Удалить';
     confirmOverlay.classList.add('open');
     return new Promise((resolve)=>{
@@ -859,7 +896,7 @@
       if(entry.sentiment === 'negative') badges.push(`<span class="badge neg">Минусовая</span>`);
       return `
         <div class="archive-row" data-id="${entry.id}">
-          <div class="archive-thumb">${entry.image ? `<img src="${entry.image}" alt="">` : 'нет фото'}</div>
+          <div class="archive-thumb">${entry.image ? mediaHTML(entry) : 'нет медиа'}</div>
           <div class="archive-info">
             <div class="archive-text">${esc(entry.storyText)}</div>
             <div class="archive-badges">${badges.join('')}</div>
@@ -1222,6 +1259,19 @@
     return (s||'').replace(/\s+/g, ' ').trim();
   }
 
+  // Renders an entry's attached media (photo or video) as an <img>/<video>
+  // tag. Older entries have no `mediaType` field — they're always photos.
+  function isVideoEntry(entry){
+    return entry.mediaType === 'video';
+  }
+  function mediaHTML(entry, extraAttrs){
+    if(!entry.image) return '';
+    const attrs = extraAttrs || '';
+    return isVideoEntry(entry)
+      ? `<video src="${entry.image}" controls muted playsinline ${attrs}></video>`
+      : `<img src="${entry.image}" alt="" ${attrs}>`;
+  }
+
   // Normalizes an entry's text variants to a consistent {name, text}[]
   // shape, regardless of how they were stored: brand-new entries save
   // objects with a name, older ones may only have a plain string array
@@ -1303,7 +1353,7 @@
       if(entry.sentiment === 'negative') badges.push(`<span class="badge neg">Минусовая</span>`);
 
       const thumbInner = entry.image
-        ? `<img src="${entry.image}" alt="">`
+        ? mediaHTML(entry)
         : `<div class="noimg">без фото</div>`;
 
       const tagsRow = (entry.tags||[]).length
@@ -1337,7 +1387,7 @@
           <div class="card-actions">
             <div class="copy-row">${copyButtons.join('')}</div>
             <div class="icon-row">
-              <button class="icon-btn dl-btn" title="Скачать фото" ${entry.image?'':'disabled style="opacity:.35;cursor:default;"'}>
+              <button class="icon-btn dl-btn" title="Скачать медиа" ${entry.image?'':'disabled style="opacity:.35;cursor:default;"'}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
               <button class="icon-btn edit-btn" title="Редактировать">
@@ -1512,7 +1562,8 @@
     const a = document.createElement('a');
     a.href = entry.image;
     const geo = entry.geo ? entry.geo.toLowerCase()+'_' : '';
-    a.download = `storik_${geo}${entry.id}.jpg`;
+    const ext = isVideoEntry(entry) ? 'mp4' : 'jpg';
+    a.download = `storik_${geo}${entry.id}.${ext}`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -1536,7 +1587,7 @@
     const imgWrap = $('#viewImageWrap');
     if(entry.image){
       imgWrap.style.display = '';
-      imgWrap.innerHTML = `<img src="${entry.image}" alt="">`;
+      imgWrap.innerHTML = mediaHTML(entry);
     } else {
       imgWrap.style.display = 'none';
       imgWrap.innerHTML = '';
@@ -1677,6 +1728,7 @@
   function resetForm(){
     editingId = null;
     pendingImage = null;
+    pendingMediaType = 'image';
     pendingAspect = '1/1';
     pendingTested = null;
     pendingSentiment = null;
@@ -1687,7 +1739,7 @@
     $('#linkButton').value = '';
     $('#commentText').value = '';
     $('#tagInput').value = '';
-    $('#imgPreview').innerHTML = 'нет фото';
+    $('#imgPreview').innerHTML = 'нет медиа';
     $('#fileInput').value = '';
     document.querySelectorAll('.aspect-toggle .pill').forEach(p=>p.classList.remove('active'));
     document.querySelector('.aspect-toggle .pill[data-ar="1/1"]').classList.add('active');
@@ -1718,13 +1770,14 @@
     $('#linkButton').value = entry.linkButton || '';
     $('#commentText').value = entry.comment || '';
     pendingImage = entry.image || null;
+    pendingMediaType = entry.mediaType || 'image';
     pendingAspect = entry.aspect || '1/1';
     pendingTested = entry.tested || null;
     pendingSentiment = entry.sentiment || null;
     pendingTags = [...(entry.tags||[])];
 
     if(pendingImage){
-      $('#imgPreview').innerHTML = `<img src="${pendingImage}" alt="">`;
+      $('#imgPreview').innerHTML = mediaHTML(entry);
     }
     document.querySelectorAll('.aspect-toggle .pill').forEach(p=>{
       p.classList.toggle('active', p.dataset.ar === pendingAspect);
@@ -1773,10 +1826,11 @@
   $('#fileInput').addEventListener('change', (e)=>{
     const file = e.target.files[0];
     if(!file) return;
+    pendingMediaType = file.type.startsWith('video/') ? 'video' : 'image';
     const reader = new FileReader();
     reader.onload = (ev)=>{
       pendingImage = ev.target.result;
-      $('#imgPreview').innerHTML = `<img src="${pendingImage}" alt="">`;
+      $('#imgPreview').innerHTML = mediaHTML({image: pendingImage, mediaType: pendingMediaType});
     };
     reader.readAsDataURL(file);
   });
@@ -1924,6 +1978,7 @@
       storyText: storyTexts[0].text,
       storyTexts: storyTexts,
       image: pendingImage,
+      mediaType: pendingImage ? pendingMediaType : null,
       aspect: pendingAspect,
       geo: geo,
       tested: pendingTested,
