@@ -1390,6 +1390,9 @@
               <button class="icon-btn dl-btn" title="Скачать медиа" ${entry.image?'':'disabled style="opacity:.35;cursor:default;"'}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
+              <button class="icon-btn clone-btn" title="Клонировать карточку">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="8" y="8" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
               <button class="icon-btn edit-btn" title="Редактировать">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
               </button>
@@ -1439,6 +1442,24 @@
           downloadImage(entry);
         });
       }
+      card.querySelector('.clone-btn').addEventListener('click', async (ev)=>{
+        ev.stopPropagation();
+        const clone = JSON.parse(JSON.stringify(entry));
+        clone.id = uid();
+        clone.createdAt = Date.now();
+        clone.active = true;
+        clone.rejected = false;
+        clone.deletedAt = null;
+        try{
+          await dbPut(clone);
+        }catch(err){
+          showToast('Не удалось клонировать карточку');
+          return;
+        }
+        entries.push(clone);
+        render();
+        showToast('Карточка клонирована');
+      });
       card.querySelector('.edit-btn').addEventListener('click', (ev)=>{
         ev.stopPropagation();
         openEdit(entry.id);
